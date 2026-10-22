@@ -1,0 +1,14 @@
+{
+  "name": "daily-energy-agent",
+  "private": true,
+  "type": "module",
+  "description": "Repo-aware daily posting agent for the Daily Energy X account",
+  "scripts": {
+    "preview": "node post.mjs --preview",
+    "dry": "node post.mjs",
+    "post": "node post.mjs --post"
+  },
+  "dependencies": {
+    "twitter-api-v2": "^1.29.1"
+  }
+}

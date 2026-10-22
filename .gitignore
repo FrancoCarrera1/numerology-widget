@@ -12,6 +12,10 @@ coverage/
 # Local personal birthday for the macOS widget (MM-DD or YYYY-MM-DD)
 uebersicht/birthday.txt
 
+# Posting agent local secrets and duplicate-post state
+agent/.env
+agent/state.json
+
 # Android / Gradle
 android/.gradle/
 android/local.properties

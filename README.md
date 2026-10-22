@@ -249,6 +249,26 @@ gh release create v1.1.0 dist/DailyEnergy-1.1.apk \
 If you use a different version, update `versionName` in
 `android/app/build.gradle.kts` and the APK filename in the commands above.
 
+## Posting agent
+
+[`agent/`](agent/README.md) contains a repo-aware posting agent for X. It reads
+today's numbers and recent repository activity, asks an OpenAI-compatible model
+for one post, validates it, and publishes through X API v2. Local runs are
+dry-run by default; GitHub Actions can run it on a daily schedule.
+
+```bash
+npm install
+npm --prefix agent install
+npm run build
+
+npm run agent:preview   # print the data and prompt, no network
+npm run agent:dry       # generate a post, do not publish
+npm run agent:post      # publish
+```
+
+See [`agent/README.md`](agent/README.md) for X app permissions, secrets, costs,
+and the schedule.
+
 ## Development
 
 ```bash
@@ -513,6 +533,11 @@ numerology-widget/
 │   ├── widget.template.jsx
 │   ├── birthday.txt              # local, gitignored
 │   ├── DailyEnergy.widget/       # generated
+│   └── README.md
+├── agent/                        # repo-aware X posting agent
+│   ├── post.mjs                  # generate, validate, publish
+│   ├── persona.md                # voice and content rules
+│   ├── .env.example              # credential template
 │   └── README.md
 ├── android/                      # native Android App Widgets
 │   ├── app/src/main/...          # Kotlin, RemoteViews, resources

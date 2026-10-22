@@ -1,0 +1,78 @@
+name: Daily Energy agent
+
+on:
+  schedule:
+    # 14:00 UTC = 9:00 AM CDT / 8:00 AM CST.
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+    inputs:
+      post:
+        description: 'Publish to X. Leave unchecked for a preview.'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-energy-agent
+  cancel-in-progress: false
+
+jobs:
+  post:
+    name: Generate and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: America/Chicago
+      BOT_TIMEZONE: America/Chicago
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+      LLM_MODEL: ${{ secrets.LLM_MODEL }}
+      BOT_BIRTHDAY: ${{ secrets.BOT_BIRTHDAY }}
+      X_API_KEY: ${{ secrets.X_API_KEY }}
+      X_API_SECRET: ${{ secrets.X_API_SECRET }}
+      X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+      X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            agent/package-lock.json
+
+      - name: Ensure agent state file
+        run: test -f agent/state.json || printf '{"recentPosts":[]}\n' > agent/state.json
+
+      - name: Restore agent state
+        uses: actions/cache@v4
+        with:
+          path: agent/state.json
+          key: agent-state-${{ github.run_id }}
+          restore-keys: |
+            agent-state-
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Build the calculation engine
+        run: npm run build
+
+      - name: Install agent dependencies
+        run: npm ci --prefix agent
+
+      - name: Publish
+        if: github.event_name == 'schedule' || inputs.post
+        run: node agent/post.mjs --post
+
+      - name: Preview
+        if: github.event_name == 'workflow_dispatch' && !inputs.post
+        run: node agent/post.mjs --preview

@@ -6,11 +6,15 @@ on:
     - cron: '0 14 * * *'
   workflow_dispatch:
     inputs:
-      post:
-        description: 'Publish to X. Leave unchecked for a preview.'
+      mode:
+        description: 'preview = data only; dry-run = generate a post; post = publish'
         required: true
-        default: false
-        type: boolean
+        default: preview
+        type: choice
+        options:
+          - preview
+          - dry-run
+          - post
 
 permissions:
   contents: read
@@ -75,9 +79,13 @@ jobs:
         run: npm ci --prefix agent
 
       - name: Publish
-        if: github.event_name == 'schedule' || inputs.post
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'post')
         run: node agent/post.mjs --post
 
+      - name: Dry run
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'dry-run'
+        run: node agent/post.mjs
+
       - name: Preview
-        if: github.event_name == 'workflow_dispatch' && !inputs.post
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
         run: node agent/post.mjs --preview

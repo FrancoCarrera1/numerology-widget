@@ -14,9 +14,10 @@ engagement farming. The interesting part is the voice in
 1. Create the bot's X account and X app. Set the app to **Read and Write** before
    generating the OAuth 1.0a access tokens.
 2. Add the four X secrets to the repository.
-3. Run the **Daily Energy agent** workflow manually with `post` unchecked to see
-   the preview.
-4. Run it again with `post` checked for the first real post.
+3. Run the **Daily Energy agent** workflow manually in `preview` mode to inspect
+   the data and prompt.
+4. Run it in `dry-run` mode to generate a post without publishing.
+5. Run it in `post` mode for the first real post.
 
 The LLM needs no extra key in Actions: the workflow uses GitHub Models through
 the built-in `GITHUB_TOKEN`. For local generation, use a provider key as shown
@@ -122,8 +123,8 @@ posts.
 
 The workflow is [`.github/workflows/agent.yml`](../.github/workflows/agent.yml).
 It runs daily at 14:00 UTC (9:00 AM CDT / 8:00 AM CST) and can be run manually
-from the Actions tab. Manual runs default to a preview; check the `post` box to
-publish. Change `BOT_TIMEZONE` and the cron expression in that file if you want a
+from the Actions tab. Manual runs offer `preview`, `dry-run`, and `post` modes.
+Change `BOT_TIMEZONE` and the cron expression in that file if you want a
 different local posting time.
 
 The workflow caches `agent/state.json` between runs so the same calendar day is

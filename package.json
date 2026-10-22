@@ -1,0 +1,90 @@
+{
+  "name": "numerology-widget",
+  "version": "1.1.0",
+  "description": "Daily energy numerology widget (GG33 / matrixprime) for macOS, Android, and the web",
+  "type": "module",
+  "main": "dist/numerology-core.cjs",
+  "module": "dist/numerology-core.mjs",
+  "types": "dist/numerology-core.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/numerology-core.d.ts",
+      "import": "./dist/numerology-core.mjs",
+      "require": "./dist/numerology-core.cjs"
+    },
+    "./web-component": {
+      "types": "./dist/web-component.d.ts",
+      "import": "./dist/web-component.mjs",
+      "require": "./dist/web-component.cjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": [
+    "./src/web-component.ts",
+    "./src/react.tsx",
+    "./dist/web-component.mjs",
+    "./dist/web-component.cjs",
+    "./dist/react.mjs",
+    "./dist/react.cjs"
+  ],
+  "scripts": {
+    "dev": "vite --config vite.demo.config.ts",
+    "build": "vite build && npm run build:standalone && npm run build:uebersicht",
+    "build:standalone": "vite build --config vite.standalone.config.ts && cp dist/numerology-widget.iife.js standalone/numerology-widget.iife.js",
+    "build:uebersicht": "node scripts/build-uebersicht.mjs",
+    "build:demo": "vite build --config vite.demo.config.ts",
+    "build:android": "bash scripts/build-android.sh",
+    "install:uebersicht": "bash scripts/install-uebersicht.sh",
+    "preview:demo": "vite preview --config vite.demo.config.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx,.js"
+  },
+  "keywords": [
+    "numerology",
+    "energy",
+    "widget",
+    "gg33",
+    "matrixprime",
+    "gary-the-numbers-guy",
+    "web-component",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "esbuild": "^0.21.5",
+    "eslint": "^8.57.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "typescript": "^5.4.0",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^4.5.0",
+    "vitest": "^1.5.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}

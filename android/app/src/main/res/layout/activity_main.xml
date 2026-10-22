@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="40dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:letterSpacing="0.24"
+            android:text="@string/label_daily_energy"
+            android:textAllCaps="true"
+            android:textColor="@color/gold_light"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/date_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:textColor="@color/muted"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/panel_background"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ScreenLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_primary" />
+
+                <TextView
+                    android:id="@+id/primary_value"
+                    style="@style/ScreenValuePrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="--" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ScreenLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_secondary" />
+
+                <TextView
+                    android:id="@+id/secondary_value"
+                    style="@style/ScreenValueSecondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="--" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/combined_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp">
+
+            <TextView
+                style="@style/ScreenLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_combined" />
+
+            <TextView
+                android:id="@+id/combined_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text="-- + --"
+                android:textColor="@color/gold_light"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/panel_background"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp">
+
+            <TextView
+                style="@style/ScreenLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_life_path" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:baselineAligned="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/life_path_value"
+                    style="@style/ScreenLifePathValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="—" />
+
+                <TextView
+                    android:id="@+id/life_path_summary"
+                    style="@style/ScreenLifePathSummary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/life_path_set_birthday" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/life_path_note"
+                style="@style/ScreenCycleNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/life_path_needs_full_date" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:fontFamily="serif"
+            android:letterSpacing="0.16"
+            android:text="@string/label_cycle_timing"
+            android:textAllCaps="true"
+            android:textColor="@color/gold_light"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="serif"
+            android:text="@string/label_cycle_timing_subtitle"
+            android:textColor="@color/muted"
+            android:textSize="10sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="104dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    style="@style/ScreenCycleLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_universal_year_short" />
+
+                <TextView
+                    android:id="@+id/uy_value"
+                    style="@style/ScreenCycleValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/uy_note"
+                    style="@style/ScreenCycleNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="104dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    style="@style/ScreenCycleLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_universal_month_short" />
+
+                <TextView
+                    android:id="@+id/um_value"
+                    style="@style/ScreenCycleValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/um_note"
+                    style="@style/ScreenCycleNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="2" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="104dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    style="@style/ScreenCycleLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_personal_year_short" />
+
+                <TextView
+                    android:id="@+id/py_value"
+                    style="@style/ScreenCycleValuePersonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/py_note"
+                    style="@style/ScreenCycleNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="104dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    style="@style/ScreenCycleLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_personal_month_short" />
+
+                <TextView
+                    android:id="@+id/pm_value"
+                    style="@style/ScreenCycleValuePersonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/pm_note"
+                    style="@style/ScreenCycleNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="2" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/birthday_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/panel_bg"
+                android:fontFamily="serif"
+                android:minHeight="0dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/set_birthday"
+                android:textAllCaps="false"
+                android:textColor="@color/gold_light"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/clear_birthday_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@color/panel_bg"
+                android:fontFamily="serif"
+                android:minHeight="0dp"
+                android:paddingStart="14dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="10dp"
+                android:text="@string/clear_birthday"
+                android:textAllCaps="false"
+                android:textColor="@color/muted"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/birthday_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="serif"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/birthday_not_set"
+            android:textColor="@color/muted"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/note_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="monospace"
+            android:lineSpacingExtra="4dp"
+            android:textColor="@color/muted"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/gold"
+            android:fontFamily="serif"
+            android:text="@string/refresh"
+            android:textAllCaps="false"
+            android:textColor="@color/app_bg"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:fontFamily="serif"
+            android:lineSpacingExtra="4dp"
+            android:text="@string/add_widget_instructions"
+            android:textColor="@color/muted"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:fontFamily="serif"
+            android:letterSpacing="0.12"
+            android:text="@string/attribution"
+            android:textAllCaps="true"
+            android:textColor="@color/rule"
+            android:textSize="10sp" />
+    </LinearLayout>
+</ScrollView>

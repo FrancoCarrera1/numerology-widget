@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#12110d" />
+    <title>Daily Energy</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --gold: #d4af37;
+        --paper: #efe6cf;
+        --muted: #9a907a;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 2.5rem 1rem 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        background:
+          radial-gradient(60% 45% at 50% 0%, rgba(212, 175, 55, 0.14), transparent 70%),
+          radial-gradient(40% 30% at 100% 100%, rgba(205, 127, 50, 0.08), transparent 70%),
+          #0b0b0a;
+        color: var(--paper);
+        font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 8vw, 3rem);
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        text-align: center;
+        text-shadow: 0 0 40px rgba(212, 175, 55, 0.22);
+      }
+
+      .eyebrow {
+        margin: 0 0 -1rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--gold);
+        text-align: center;
+      }
+
+      numerology-widget {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: end;
+        gap: 0.75rem;
+        width: 100%;
+        max-width: 400px;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(212, 175, 55, 0.22);
+      }
+
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        flex: 1 1 160px;
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      input,
+      button {
+        font-family: inherit;
+        font-size: 0.82rem;
+        color: var(--paper);
+        background: #14130f;
+        border: 1px solid rgba(212, 175, 55, 0.22);
+        border-radius: 6px;
+        padding: 0.55rem 0.8rem;
+      }
+
+      input { color-scheme: dark; }
+
+      button {
+        cursor: pointer;
+        color: #e8c56d;
+        flex: 1 1 100%;
+      }
+
+      button:hover,
+      input:focus-visible {
+        border-color: var(--gold);
+        outline: none;
+        box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35), 0 0 18px rgba(212, 175, 55, 0.18);
+      }
+    </style>
+  </head>
+  <body>
+    <p class="eyebrow">GG33</p>
+    <h1>Daily Energy</h1>
+
+    <numerology-widget id="widget" auto-refresh></numerology-widget>
+
+    <div class="controls">
+      <label>
+        <span>Jump to a date</span>
+        <input id="date-picker" type="date" />
+      </label>
+      <button id="today-button" type="button">Return to today</button>
+    </div>
+
+    <script src="./numerology-widget.iife.js"></script>
+    <script>
+      const widget = document.getElementById('widget');
+      const picker = document.getElementById('date-picker');
+      const birthdayKey = 'numerology-widget-birthday';
+      const savedBirthday = localStorage.getItem(birthdayKey);
+      if (savedBirthday) widget.setBirthday(savedBirthday);
+      picker.value = widget.getDate();
+      picker.addEventListener('change', () => picker.value && widget.setDate(picker.value));
+      document.getElementById('today-button').addEventListener('click', () => {
+        widget.goToToday();
+        picker.value = widget.getDate();
+      });
+      widget.addEventListener('date-change', (event) => {
+        if (event.detail && event.detail.date) picker.value = event.detail.date;
+      });
+      widget.addEventListener('birthday-change', (event) => {
+        const birthday = event.detail && event.detail.birthday;
+        if (birthday) {
+          localStorage.setItem(birthdayKey, birthday);
+        } else {
+          localStorage.removeItem(birthdayKey);
+        }
+      });
+    </script>
+  </body>
+</html>

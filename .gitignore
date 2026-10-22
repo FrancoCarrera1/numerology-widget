@@ -1,0 +1,21 @@
+node_modules/
+dist/
+demo-dist/
+*.local
+.DS_Store
+coverage/
+*.log
+
+# Local build toolchain (JDK / Android SDK / Gradle)
+.tooling/
+
+# Local personal birthday for the macOS widget (MM-DD or YYYY-MM-DD)
+uebersicht/birthday.txt
+
+# Android / Gradle
+android/.gradle/
+android/local.properties
+android/**/build/
+android/.idea/
+android/*.iml
+android/.kotlin/

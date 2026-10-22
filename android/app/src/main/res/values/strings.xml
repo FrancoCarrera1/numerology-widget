@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Daily Energy</string>
+    <string name="widget_description">Today\'s GG33 energy, Life Path, and timing cycles</string>
+    <string name="calendar_widget_name">Daily Energy Calendar</string>
+    <string name="calendar_widget_description">A full month of daily numerology energies with Life Path and timing cycles</string>
+    <string name="calendar_image_description">Monthly energy calendar with daily primary and secondary numbers, plus Life Path</string>
+    <string name="label_energy_calendar">Energy Calendar</string>
+    <string name="label_today">Today</string>
+    <string name="label_uy">UY</string>
+    <string name="label_um">UM</string>
+    <string name="label_py">PY</string>
+    <string name="label_pm">PM</string>
+    <string name="label_universal_year">Universal Year</string>
+    <string name="label_universal_month">Universal Month</string>
+    <string name="label_personal_year">Personal Year</string>
+    <string name="label_personal_month">Personal Month</string>
+    <string name="label_life_path">Life Path</string>
+    <string name="life_path_set_birthday">Set birthday</string>
+    <string name="life_path_needs_full_date">A full birth date unlocks Life Path and personal cycles.</string>
+    <string name="life_path_note_format">%1$d + %2$d + %3$d = %4$d → %5$s</string>
+    <string name="life_path_wealth_note">28 · 1 underneath</string>
+    <string name="life_path_33_note">33 · 6 underneath</string>
+    <string name="life_path_master_note">%1$d · master number</string>
+    <string name="birthday">Birthday</string>
+    <string name="set_birthday">Set birthday</string>
+    <string name="clear_birthday">Clear</string>
+    <string name="birthday_not_set">Set a full birthday to see Life Path, Personal Year, and Personal Month. Personal cycles use only the month and day.</string>
+    <string name="birthday_format">Birthday · %1$s</string>
+    <string name="birthday_changes">Personal Year changes on %1$s each year. Personal Month changes on that day each month.</string>
+    <string name="label_cycle_timing">Timing Cycles</string>
+    <string name="label_cycle_timing_subtitle">Universal &amp; personal cycles</string>
+    <string name="label_universal_year_short">Universal Year</string>
+    <string name="label_universal_month_short">Universal Month</string>
+    <string name="label_personal_year_short">Personal Year</string>
+    <string name="label_personal_month_short">Personal Month</string>
+    <string name="label_primary">Primary</string>
+    <string name="label_secondary">Secondary</string>
+    <string name="label_combined">Combined</string>
+    <string name="label_daily_energy">Daily Energy</string>
+    <string name="refresh">Refresh</string>
+    <string name="refresh_symbol">↻</string>
+    <string name="add_widget_instructions">Add to your home screen: long-press an empty area, choose Widgets, then Daily Energy. Two widgets are available: Daily Energy (4×2) and Daily Energy Calendar (4×4).</string>
+    <string name="attribution">GG33</string>
+</resources>

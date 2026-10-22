@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/app_bg</item>
+        <item name="android:statusBarColor">@color/app_bg</item>
+        <item name="android:navigationBarColor">@color/app_bg</item>
+        <item name="android:colorAccent">@color/gold</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+    <style name="WidgetLabel">
+        <item name="android:textSize">8sp</item>
+        <item name="android:letterSpacing">0.18</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/muted</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+    <style name="WidgetValuePrimary">
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/gold</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="WidgetValueSecondary">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/bronze</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="ScreenLabel">
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.18</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/muted</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+    <style name="ScreenValuePrimary">
+        <item name="android:textSize">54sp</item>
+        <item name="android:textColor">@color/gold</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="ScreenValueSecondary">
+        <item name="android:textSize">38sp</item>
+        <item name="android:textColor">@color/bronze</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="ScreenLifePathValue">
+        <item name="android:textSize">38sp</item>
+        <item name="android:textColor">@color/gold</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="ScreenLifePathSummary">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/paper</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+    <style name="ScreenCycleLabel">
+        <item name="android:textSize">9sp</item>
+        <item name="android:letterSpacing">0.14</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/muted</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+    <style name="ScreenCycleValue">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/gold</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="ScreenCycleValuePersonal">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/bronze</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="ScreenCycleNote">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">@color/muted</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:lineSpacingExtra">1dp</item>
+    </style>
+</resources>

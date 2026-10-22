@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  models: read
 
 concurrency:
   group: daily-energy-agent
@@ -27,9 +28,13 @@ jobs:
     env:
       TZ: America/Chicago
       BOT_TIMEZONE: America/Chicago
-      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
-      LLM_MODEL: ${{ secrets.LLM_MODEL }}
+      # GitHub Models is the default in Actions: the built-in token gets
+      # models:read from the permissions block above. To use another
+      # OpenAI-compatible provider, set LLM_API_KEY, LLM_BASE_URL, and
+      # LLM_MODEL together.
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY || github.token }}
+      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL || 'https://models.github.ai/inference' }}
+      LLM_MODEL: ${{ secrets.LLM_MODEL || 'openai/gpt-4.1' }}
       BOT_BIRTHDAY: ${{ secrets.BOT_BIRTHDAY }}
       X_API_KEY: ${{ secrets.X_API_KEY }}
       X_API_SECRET: ${{ secrets.X_API_SECRET }}

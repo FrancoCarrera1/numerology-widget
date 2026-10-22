@@ -9,6 +9,19 @@ It is intentionally boring infrastructure: one post, no replies, no media, no
 engagement farming. The interesting part is the voice in
 [`persona.md`](./persona.md) and the repo context it reads each run.
 
+## Quickest path
+
+1. Create the bot's X account and X app. Set the app to **Read and Write** before
+   generating the OAuth 1.0a access tokens.
+2. Add the four X secrets to the repository.
+3. Run the **Daily Energy agent** workflow manually with `post` unchecked to see
+   the preview.
+4. Run it again with `post` checked for the first real post.
+
+The LLM needs no extra key in Actions: the workflow uses GitHub Models through
+the built-in `GITHUB_TOKEN`. For local generation, use a provider key as shown
+below.
+
 ## What it does
 
 1. Resolves "today" in `BOT_TIMEZONE`.
@@ -47,16 +60,24 @@ does not read mentions or timelines in this version.
 
 ### 2. Model
 
-Any OpenAI-compatible chat completions endpoint works. For example:
+GitHub Actions uses **GitHub Models** by default. The workflow's built-in
+`GITHUB_TOKEN` gets `models: read`, so no LLM secret is required there. Locally,
+use a provider key such as Groq, or a GitHub PAT with `models:read` and the
+GitHub Models endpoint.
+
+Any OpenAI-compatible chat completions endpoint works:
 
 | Provider | `LLM_BASE_URL` | `LLM_MODEL` |
 | --- | --- | --- |
+| GitHub Models | `https://models.github.ai/inference` | `openai/gpt-4.1` |
 | Groq | `https://api.groq.com/openai/v1` | `llama-3.3-70b-versatile` |
 | Gemini (OpenAI compatibility) | `https://generativelanguage.googleapis.com/v1beta/openai` | a current Gemini Flash model |
 | OpenAI | `https://api.openai.com/v1` | a current small model |
 
 The agent appends `/chat/completions` to the base URL. Model names change; use
-whatever the provider currently lists.
+whatever the provider currently lists. If the default GitHub Models model is
+unavailable, pick another from the GitHub Models catalog. If you use a non-GitHub
+provider in Actions, set `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL` together.
 
 ### 3. Local run
 
@@ -90,9 +111,9 @@ Add these repository secrets under **Settings → Secrets and variables → Acti
 | `X_API_SECRET` | yes | X API secret |
 | `X_ACCESS_TOKEN` | yes | Bot account access token |
 | `X_ACCESS_SECRET` | yes | Bot account access secret |
-| `LLM_API_KEY` | yes | Model provider key |
-| `LLM_BASE_URL` | no | Defaults to Groq |
-| `LLM_MODEL` | no | Defaults to `llama-3.3-70b-versatile` |
+| `LLM_API_KEY` | no | Defaults to the Actions token for GitHub Models; set with the next two for another provider |
+| `LLM_BASE_URL` | no | Defaults to GitHub Models |
+| `LLM_MODEL` | no | Defaults to `openai/gpt-4.1` |
 | `BOT_BIRTHDAY` | no | `YYYY-MM-DD` for Life Path/personal cycles, or `MM-DD` for personal cycles only |
 
 `BOT_BIRTHDAY` is optional. If you set it to a real birthday, the agent will

@@ -254,7 +254,9 @@ If you use a different version, update `versionName` in
 [`agent/`](agent/README.md) contains a repo-aware posting agent for X. It reads
 today's numbers and recent repository activity, asks an OpenAI-compatible model
 for one post, validates it, and publishes through X API v2. Local runs are
-dry-run by default; GitHub Actions can run it on a daily schedule.
+dry-run by default; GitHub Actions can run it on a daily schedule. In Actions it
+uses GitHub Models through the built-in token by default, so the only required
+secrets are the four X credentials.
 
 ```bash
 npm install

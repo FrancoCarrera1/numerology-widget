@@ -291,15 +291,24 @@ async function callLLM(system, user) {
 
   const baseUrl = (env('LLM_BASE_URL') || 'https://api.groq.com/openai/v1').replace(/\/+$/, '');
   const model = env('LLM_MODEL') || 'llama-3.3-70b-versatile';
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  // GitHub Models is OpenAI-compatible but also accepts the GitHub API
+  // version/accept headers. Other providers ignore them, so send them only
+  // when the endpoint is GitHub Models.
+  if (baseUrl.includes('models.github.ai')) {
+    headers.Accept = 'application/vnd.github+json';
+    headers['X-GitHub-Api-Version'] = '2022-11-28';
+  }
 
   let response;
   try {
     response = await fetch(`${baseUrl}/chat/completions`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers,
       body: JSON.stringify({
         model,
         messages: [

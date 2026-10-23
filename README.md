@@ -18,9 +18,10 @@ personal timing cycles:
 | **Personal Year (PY)** | Birth month + birth day + the year of the active birthday cycle; changes on your birthday |
 | **Personal Month (PM)** | Personal Year + the month the current birthday-to-birthday cycle began; changes on your birth day each month |
 
-Every widget also includes a **monthly energy calendar**. The web widget can
-change months and click any day; the macOS widget shows the current month; the
-Android calendar widget is a separate 4×4 home-screen widget.
+Every widget also includes a **monthly energy calendar**. The web, macOS, and
+Android calendar widgets can change months; the web widget can also click a day
+to update the main numbers. The Android calendar is a separate 4×4 home-screen
+widget.
 
 It ships in these forms:
 
@@ -54,15 +55,16 @@ automatically; if it does not appear, choose **Refresh all Widgets** from the
 
 It appears 28 px from the top-right corner and refreshes once a minute, so the
 date rolls over at local midnight. It shows your Life Path, today's daily
-energy, the four timing cycles, and the current month's calendar. The footer reads
-**GG33**.
+energy, the four timing cycles, and a month calendar with previous/next controls.
+The footer reads **GG33**.
 
 Life Path, Personal Year, and Personal Month need a birthday. You can set it
 directly in the macOS widget: enable **Interaction** in the Übersicht menu-bar
 settings (grant Accessibility access if macOS asks), click **Set** / **Edit**
 next to **Birthday**, enter `YYYY-MM-DD` (for example `2003-05-23`), and press
 **Save**. The year is required for Life Path; Personal Year/Month still use only
-the month and day.
+the month and day. The calendar arrows and the **Today** reset also use
+Interaction.
 
 The form stores the value in the widget's `localStorage`, so it survives
 reloads and widget updates. The build-time value is the fallback for a fresh
@@ -125,8 +127,8 @@ This is a real native App Widget, not a browser shortcut.
    - **Daily Energy** — a 4×2 card with today's primary/secondary/combined
      energy and `LP`. If you resize it to three or more rows, the compact
      `LP / UY / UM / PY / PM` line appears.
-   - **Daily Energy Calendar** — a 4×4 card with the current month, today's
-     energy, `LP`, and the four timing cycles above the calendar.
+   - **Daily Energy Calendar** — a 4×4 card with a month calendar you can move
+     with ‹ / ›, today's energy, `LP`, and the four timing cycles above it.
 
 Tap either card to open the full-screen app; tap **↻** to refresh immediately.
 The widgets update themselves at 12:01 a.m. local time, with a 30-minute system

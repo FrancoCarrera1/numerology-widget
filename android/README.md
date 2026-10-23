@@ -10,13 +10,15 @@ Kotlin app with no AndroidX or Compose runtime dependencies; the widget UI uses
   - **Daily Energy** — 4×2 cells, resizable. Today's primary, secondary, and
     combined energy. Resize to three or more rows to reveal a compact
     `UY / UM / PY / PM` line.
-  - **Daily Energy Calendar** — 4×4 cells, resizable. Current month, today's
-    energy, the four timing cycles, and a Sunday-first calendar grid.
+  - **Daily Energy Calendar** — 4×4 cells, resizable. A navigable month
+    calendar, today's energy, the four timing cycles, and a Sunday-first grid.
 - **Birthday:** set it in the app. It drives Personal Year and Personal Month;
   only the month and day are used.
 - **Updates:** alarm at 12:01 a.m. local time, plus a 30-minute system fallback
 - **Tap a card:** opens the full-screen app
 - **Tap ↻:** refreshes immediately
+- **Calendar month:** tap ‹ / › to move between months; tap the month label to
+  return to the current month
 
 ## Build
 

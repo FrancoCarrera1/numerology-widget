@@ -16,6 +16,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.widget.RemoteViews
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -23,11 +24,12 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * A larger home-screen widget that renders the whole current month.
+ * A larger home-screen widget that renders a whole month.
  *
  * The calendar is drawn to a bitmap so a 7-column grid stays readable without
- * inflating dozens of RemoteViews. Tapping the card opens the app; the refresh
- * glyph redraws it immediately.
+ * inflating dozens of RemoteViews. The arrows switch months; tapping the month
+ * label returns to the current month. Tapping the card opens the app; the
+ * refresh glyph redraws it immediately.
  */
 class DailyEnergyCalendarWidgetProvider : AppWidgetProvider() {
 
@@ -61,16 +63,47 @@ class DailyEnergyCalendarWidgetProvider : AppWidgetProvider() {
         cancelMidnightUpdate(context)
     }
 
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        super.onDeleted(context, appWidgetIds)
+        appWidgetIds.forEach { clearSelectedMonth(context, it) }
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
+        val manager = AppWidgetManager.getInstance(context)
 
-        if (intent.action == ACTION_REFRESH_CALENDAR) {
-            val manager = AppWidgetManager.getInstance(context)
-            val ids = manager.getAppWidgetIds(
-                ComponentName(context, DailyEnergyCalendarWidgetProvider::class.java)
-            )
-            ids.forEach { updateWidget(context, manager, it) }
-            scheduleMidnightUpdate(context)
+        when (intent.action) {
+            ACTION_REFRESH_CALENDAR -> {
+                val ids = manager.getAppWidgetIds(
+                    ComponentName(context, DailyEnergyCalendarWidgetProvider::class.java)
+                )
+                ids.forEach { updateWidget(context, manager, it) }
+                scheduleMidnightUpdate(context)
+            }
+
+            ACTION_PREV_MONTH,
+            ACTION_NEXT_MONTH,
+            ACTION_CURRENT_MONTH -> {
+                val widgetId = intent.getIntExtra(
+                    EXTRA_WIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID
+                )
+                if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) return
+
+                if (intent.action == ACTION_CURRENT_MONTH) {
+                    clearSelectedMonth(context, widgetId)
+                } else {
+                    val current = getSelectedMonth(context, widgetId) ?: YearMonth.now()
+                    val target = if (intent.action == ACTION_PREV_MONTH) {
+                        current.minusMonths(1)
+                    } else {
+                        current.plusMonths(1)
+                    }
+                    setSelectedMonth(context, widgetId, target)
+                }
+
+                updateWidget(context, manager, widgetId)
+            }
         }
     }
 
@@ -106,11 +139,68 @@ class DailyEnergyCalendarWidgetProvider : AppWidgetProvider() {
 
     companion object {
         const val ACTION_REFRESH_CALENDAR = "io.github.francocarrera1.dailyenergy.ACTION_REFRESH_CALENDAR"
+        private const val ACTION_PREV_MONTH = "io.github.francocarrera1.dailyenergy.ACTION_PREV_MONTH"
+        private const val ACTION_NEXT_MONTH = "io.github.francocarrera1.dailyenergy.ACTION_NEXT_MONTH"
+        private const val ACTION_CURRENT_MONTH = "io.github.francocarrera1.dailyenergy.ACTION_CURRENT_MONTH"
+        private const val EXTRA_WIDGET_ID = "widget_id"
+        private const val PREFS_NAME = "daily_energy_calendar_widget"
+        private const val MONTH_KEY_PREFIX = "month_"
         private const val REFRESH_REQUEST_CODE = 43
         private const val OPEN_APP_REQUEST_CODE = 44
+        private const val MONTH_REQUEST_BASE = 1000
 
         private val WEEKDAYS = listOf("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
         private val DATE_FORMAT = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy", Locale.US)
+
+        private fun preferences(context: Context) =
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        private fun monthKey(widgetId: Int) = "$MONTH_KEY_PREFIX$widgetId"
+
+        private fun getSelectedMonth(context: Context, widgetId: Int): YearMonth? {
+            val value = preferences(context).getString(monthKey(widgetId), null) ?: return null
+            return try {
+                YearMonth.parse(value)
+            } catch (_: Exception) {
+                null
+            }
+        }
+
+        private fun setSelectedMonth(context: Context, widgetId: Int, month: YearMonth) {
+            val editor = preferences(context).edit()
+            if (month == YearMonth.now()) {
+                editor.remove(monthKey(widgetId))
+            } else {
+                editor.putString(monthKey(widgetId), month.toString())
+            }
+            editor.apply()
+        }
+
+        private fun clearSelectedMonth(context: Context, widgetId: Int) {
+            preferences(context).edit().remove(monthKey(widgetId)).apply()
+        }
+
+        private fun monthIntent(
+            context: Context,
+            widgetId: Int,
+            action: String
+        ): PendingIntent {
+            val intent = Intent(context, DailyEnergyCalendarWidgetProvider::class.java).apply {
+                this.action = action
+                putExtra(EXTRA_WIDGET_ID, widgetId)
+            }
+            val offset = when (action) {
+                ACTION_PREV_MONTH -> 0
+                ACTION_NEXT_MONTH -> 1
+                else -> 2
+            }
+            return PendingIntent.getBroadcast(
+                context,
+                MONTH_REQUEST_BASE + widgetId * 3 + offset,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
 
         fun updateAllWidgets(context: Context) {
             val manager = AppWidgetManager.getInstance(context)
@@ -127,7 +217,8 @@ class DailyEnergyCalendarWidgetProvider : AppWidgetProvider() {
         ) {
             val today = LocalDate.now()
             val energies = Numerology.calculate(today)
-            val month = CalendarMonthBuilder.build(today)
+            val selectedMonth = getSelectedMonth(context, widgetId) ?: YearMonth.from(today)
+            val month = CalendarMonthBuilder.build(selectedMonth.atDay(1))
             val birthdayDate = BirthdayStore.getDate(context)
             val birthday = birthdayDate?.let { Birthday(it.monthValue, it.dayOfMonth) }
             val cycles = Cycles.calculateCycleEnergies(today, birthday)
@@ -135,6 +226,10 @@ class DailyEnergyCalendarWidgetProvider : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.widget_calendar)
 
             views.setTextViewText(R.id.calendar_month, month.label)
+            views.setContentDescription(
+                R.id.calendar_month,
+                "${month.label}. ${context.getString(R.string.calendar_month_hint)}"
+            )
             views.setTextViewText(
                 R.id.calendar_today_energy,
                 "${energies.fullDateEnergy.displayValue} + ${energies.secondaryEnergy.displayValue}"
@@ -210,6 +305,18 @@ class DailyEnergyCalendarWidgetProvider : AppWidgetProvider() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.calendar_refresh, refreshPendingIntent)
+            views.setOnClickPendingIntent(
+                R.id.calendar_prev,
+                monthIntent(context, widgetId, ACTION_PREV_MONTH)
+            )
+            views.setOnClickPendingIntent(
+                R.id.calendar_next,
+                monthIntent(context, widgetId, ACTION_NEXT_MONTH)
+            )
+            views.setOnClickPendingIntent(
+                R.id.calendar_month,
+                monthIntent(context, widgetId, ACTION_CURRENT_MONTH)
+            )
 
             val openApp = Intent(context, MainActivity::class.java)
             val openAppPendingIntent = PendingIntent.getActivity(

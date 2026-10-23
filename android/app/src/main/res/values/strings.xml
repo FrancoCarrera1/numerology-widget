@@ -6,6 +6,11 @@
     <string name="calendar_widget_description">A full month of daily numerology energies with Life Path and timing cycles</string>
     <string name="calendar_image_description">Monthly energy calendar with daily primary and secondary numbers, plus Life Path</string>
     <string name="label_energy_calendar">Energy Calendar</string>
+    <string name="calendar_previous_month">Previous month</string>
+    <string name="calendar_next_month">Next month</string>
+    <string name="calendar_previous_symbol">‹</string>
+    <string name="calendar_next_symbol">›</string>
+    <string name="calendar_month_hint">Tap to return to the current month</string>
     <string name="label_today">Today</string>
     <string name="label_uy">UY</string>
     <string name="label_um">UM</string>

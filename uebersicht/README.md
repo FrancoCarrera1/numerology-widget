@@ -68,7 +68,10 @@ in sync with the web and Android versions.
 - Refreshes once a minute, so the date rolls over at local midnight.
 - Shows Life Path, today's primary (full-date) energy, secondary energy,
   combined key, Universal Year, Universal Month, Personal Year, Personal Month,
-  and the current month's calendar.
+  and a month calendar.
+- Use the ‹ / › buttons to move between months. When you are away from the
+  current month, a **Today** button appears next to them to jump back.
+  Interaction must be enabled in Übersicht for the calendar controls.
 - The calendar is Sunday-first, covers 4–6 weeks, and highlights today.
 - Personal Month uses the month in which the current birthday-to-birthday cycle
   began. For a May 23 birthday, the Sep 23–Oct 23 cycle uses September:

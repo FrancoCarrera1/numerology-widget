@@ -52,6 +52,20 @@ const initialBirthday = (() => {
   }
 })();
 
+const dateFromOutput = (output) => {
+  const seconds = parseInt(output, 10);
+  return Number.isFinite(seconds) ? new Date(seconds * 1000) : new Date();
+};
+
+const firstOfMonthKey = (date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`;
+
+const shiftMonthKey = (key, delta) => {
+  const base = key ? new Date(`${key}T00:00:00`) : new Date();
+  if (Number.isNaN(base.getTime())) return firstOfMonthKey(new Date());
+  return firstOfMonthKey(new Date(base.getFullYear(), base.getMonth() + delta, 1));
+};
+
 const GOLD = '#d4af37';
 const GOLD_LIGHT = '#e8c56d';
 const BRONZE = '#cd7f32';
@@ -69,6 +83,7 @@ export const initialState = {
   output: '',
   error: null,
   birthday: initialBirthday,
+  calendarMonth: null,
   editing: false,
   draft: '',
   formError: null
@@ -118,15 +133,43 @@ export const updateState = (event, previousState) => {
         };
       }
     }
-    default:
+    case 'CALENDAR_SHIFT': {
+      const delta = Number(event.delta);
+      if (!Number.isFinite(delta) || delta === 0) return previousState;
+
+      const baseKey =
+        previousState.calendarMonth ||
+        firstOfMonthKey(dateFromOutput(previousState.output));
+
+      return {
+        ...previousState,
+        calendarMonth: shiftMonthKey(baseKey, delta)
+      };
+    }
+    case 'CALENDAR_TODAY':
+      return { ...previousState, calendarMonth: null };
+    default: {
       if (event.error) {
         return { ...previousState, error: event.error };
       }
+
+      const nextOutput =
+        event.output !== undefined ? event.output : previousState.output;
+      const previousCurrentMonth = firstOfMonthKey(dateFromOutput(previousState.output));
+      const nextCurrentMonth = firstOfMonthKey(dateFromOutput(nextOutput));
+      const calendarMonth =
+        previousState.calendarMonth === previousCurrentMonth &&
+        previousCurrentMonth !== nextCurrentMonth
+          ? null
+          : previousState.calendarMonth;
+
       return {
         ...previousState,
-        output: event.output !== undefined ? event.output : previousState.output,
-        error: null
+        output: nextOutput,
+        error: null,
+        calendarMonth
       };
+    }
   }
 };
 
@@ -361,8 +404,9 @@ const calendar = {
 
 const calendarHeader = {
   display: 'flex',
-  alignItems: 'baseline',
+  alignItems: 'center',
   justifyContent: 'space-between',
+  gap: '8px',
   marginBottom: '7px'
 };
 
@@ -371,6 +415,34 @@ const calendarMonth = {
   fontSize: '10px',
   color: GOLD_LIGHT,
   letterSpacing: '0.04em'
+};
+
+const calendarNav = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '2px'
+};
+
+const calendarArrow = {
+  ...smallButton,
+  padding: '1px 5px',
+  minWidth: '18px',
+  fontSize: '12px',
+  lineHeight: '1',
+  textTransform: 'none'
+};
+
+const calendarMonthText = {
+  ...calendarMonth,
+  minWidth: '82px',
+  textAlign: 'center'
+};
+
+const calendarTodayButton = {
+  ...smallButton,
+  padding: '2px 5px',
+  fontSize: '7px',
+  letterSpacing: '0.06em'
 };
 
 const weekdayRow = {
@@ -444,7 +516,7 @@ const footer = {
 };
 
 export const render = (
-  { output, error, birthday, editing, draft, formError: birthdayError },
+  { output, error, birthday, calendarMonth, editing, draft, formError: birthdayError },
   dispatch
 ) => {
   if (error) {
@@ -461,7 +533,9 @@ export const render = (
   const energies = NumerologyCore.calculateNumerologyEnergies(now);
   const todayKey = NumerologyCore.formatDateKey(now);
   const cycles = NumerologyCore.calculateCycleEnergies(todayKey, birthday || null);
-  const month = NumerologyCore.generateMonthlyCalendar(todayKey);
+  const month = NumerologyCore.generateMonthlyCalendar(calendarMonth || todayKey);
+  const isCurrentMonth =
+    month.year === now.getFullYear() && month.month === now.getMonth();
   const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const lifePath = (() => {
@@ -606,7 +680,37 @@ export const render = (
       <div style={calendar}>
         <div style={calendarHeader}>
           <span style={label}>Energy Calendar</span>
-          <span style={calendarMonth}>{month.monthLabel}</span>
+          <div style={calendarNav}>
+            <button
+              type="button"
+              style={calendarArrow}
+              aria-label="Previous month"
+              title="Previous month"
+              onClick={() => dispatch({ type: 'CALENDAR_SHIFT', delta: -1 })}
+            >
+              ‹
+            </button>
+            <span style={calendarMonthText}>{month.monthLabel}</span>
+            <button
+              type="button"
+              style={calendarArrow}
+              aria-label="Next month"
+              title="Next month"
+              onClick={() => dispatch({ type: 'CALENDAR_SHIFT', delta: 1 })}
+            >
+              ›
+            </button>
+            {isCurrentMonth ? null : (
+              <button
+                type="button"
+                style={calendarTodayButton}
+                title="Back to the current month"
+                onClick={() => dispatch({ type: 'CALENDAR_TODAY' })}
+              >
+                Today
+              </button>
+            )}
+          </div>
         </div>
 
         <div style={weekdayRow}>

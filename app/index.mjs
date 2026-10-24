@@ -19,7 +19,7 @@
  *   CHART_MODEL        e.g. anthropic/claude-sonnet-4 (otherwise Pi's configured default)
  */
 
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, resolve, join } from 'node:path';
 import { homedir } from 'node:os';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
@@ -511,7 +511,12 @@ async function main() {
   console.log(`The Chart wrote ${BRIEF_PATH} (${used} tool call(s), cap ${MAX_TOOL_CALLS}).`);
 }
 
-main().catch((error) => {
-  console.error('Fatal:', error);
-  process.exit(1);
-});
+export { buildTools, buildSystemPrompt, buildDryBrief, profile, dateEnergy, rangeScan, lifePath, calendar };
+
+// Only run when executed directly (tests import this module for the tool wiring).
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error('Fatal:', error);
+    process.exit(1);
+  });
+}

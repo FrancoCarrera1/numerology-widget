@@ -50,7 +50,8 @@
     "lint": "eslint src --ext .ts,.tsx,.js",
     "agent:preview": "npm --prefix agent run preview",
     "agent:dry": "npm --prefix agent run dry",
-    "agent:post": "npm --prefix agent run post"
+    "agent:post": "npm --prefix agent run post",
+    "tool": "node tool/numerology-cli.mjs"
   },
   "keywords": [
     "numerology",

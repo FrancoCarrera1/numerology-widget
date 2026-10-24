@@ -29,7 +29,7 @@
             android:id="@+id/calendar_prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/calendar_previous_month"
+            android:contentDescription="@string/calendar_previous_week"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
             android:text="@string/calendar_previous_symbol"
@@ -37,21 +37,21 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/calendar_month"
+            android:id="@+id/calendar_range_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="74dp"
+            android:minWidth="96dp"
             android:gravity="center"
-            android:contentDescription="@string/calendar_month_hint"
+            android:contentDescription="@string/calendar_week_hint"
             android:fontFamily="monospace"
             android:textColor="@color/paper"
-            android:textSize="10sp" />
+            android:textSize="11sp" />
 
         <TextView
             android:id="@+id/calendar_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/calendar_next_month"
+            android:contentDescription="@string/calendar_next_week"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
             android:text="@string/calendar_next_symbol"

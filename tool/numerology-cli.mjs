@@ -34,21 +34,19 @@ const {
   calculateLifePath,
   generateMonthlySchedule,
   formatDateKey,
+  reduceToSingleDigit,
 } = core;
 
 const BIRTH_DATE = '2003-05-23';
 const PUBLISH_DIGITS = new Set([3, 5, 6, 9]);
 
-function reduceFull(n) {
-  while (n > 9) {
-    n = String(n).split('').reduce((s, d) => s + Number(d), 0);
-  }
-  return n;
-}
-
+/**
+ * Eligibility uses the engine's own reduction, so master numbers stay whole
+ * exactly as they do everywhere else (22 is 22, never 4).
+ */
 function publishEligible(dateKey) {
   const day = Number(dateKey.slice(8, 10));
-  return PUBLISH_DIGITS.has(reduceFull(day));
+  return PUBLISH_DIGITS.has(reduceToSingleDigit(day));
 }
 
 function out(obj) {

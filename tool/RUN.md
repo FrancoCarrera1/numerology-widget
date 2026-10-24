@@ -141,9 +141,16 @@ form in every mode.
 
 ## Semantics worth knowing
 
-- `publish_eligible` is **not** derived from the displayed energy. It reduces the
-  **day of the month** and checks membership in `{3, 5, 6, 9}`. So 2026-10-22
-  (day 22 → 4) is `false` even though its full-date energy is `6/33`.
+- **Master numbers are never broken down.** `22` stays `22` in every path
+  (`reduceToSingleDigit(22) === 22`), and the engine reports
+  `secondary_energy: "22"` with the note "Master number day". The
+  `n/xx` full-date pairs come from the **two methods**, which differ on the 10s:
+  for 2026-10-22, Method 1 is `1+22+10 = 33 → 33` and Method 2 is
+  `10+22+10 = 42 → 6`, hence `6/33`.
+- `publish_eligible` is not derived from the displayed energy. It takes the **day
+  of the month**, reduces it with the engine's own `reduceToSingleDigit` (masters
+  whole), and checks membership in `{3, 5, 6, 9}`. So 2026-10-22 is `false`
+  because the day is `22` — a master number, and not one of those four.
 - Reduction rules live in `src/numerology-core.ts` and are covered by
   `src/__tests__/numerology-core.test.ts`. Do not add arithmetic here; if a rule
   needs to change, change the engine and its tests.

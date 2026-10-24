@@ -51,7 +51,9 @@
     "agent:preview": "npm --prefix agent run preview",
     "agent:dry": "npm --prefix agent run dry",
     "agent:post": "npm --prefix agent run post",
-    "tool": "node tool/numerology-cli.mjs"
+    "tool": "node tool/numerology-cli.mjs",
+    "mcp": "node mcp/server.mjs",
+    "app": "node app/index.mjs"
   },
   "keywords": [
     "numerology",
@@ -90,5 +92,8 @@
     "react": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2"
   }
 }

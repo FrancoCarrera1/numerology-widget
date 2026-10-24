@@ -1,0 +1,14 @@
+{
+  "name": "the-chart",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node --experimental-strip-types index.mjs",
+    "once": "node --experimental-strip-types index.mjs --once"
+  },
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "^1.4.0"
+  }
+}

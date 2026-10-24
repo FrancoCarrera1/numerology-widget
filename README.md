@@ -18,10 +18,10 @@ personal timing cycles:
 | **Personal Year (PY)** | Birth month + birth day + the year of the active birthday cycle; changes on your birthday |
 | **Personal Month (PM)** | Personal Year + the month the current birthday-to-birthday cycle began; changes on your birth day each month |
 
-Every widget also includes a **monthly energy calendar**. The web, macOS, and
-Android calendar widgets can change months; the web widget can also click a day
-to update the main numbers. The Android calendar is a separate 4×4 home-screen
-widget.
+Every widget also includes an **energy calendar**. The web widget shows the
+current month, can change months, and lets you click a day to update the main
+numbers; the macOS widget shows a month you can page through; the Android
+calendar widget shows **five rolling days** with ‹ / › controls.
 
 It ships in these forms:
 
@@ -31,6 +31,27 @@ It ships in these forms:
 | **Android / Pixel** | Kotlin App Widgets (APK) | Yes — home screen, 4×2 daily + 4×4 calendar |
 | **iPhone, iPad, Windows, Linux** | Web app / home-screen shortcut | No |
 | **Any browser** | `<numerology-widget>` custom element | No |
+
+## Agent surfaces
+
+Three more surfaces call the same engine. No rule lives outside
+`src/numerology-core.ts`:
+
+| Surface | Path | What it is |
+| --- | --- | --- |
+| **CLI** | `tool/numerology-cli.mjs` | JSON on stdout for shell scripts, cron and non-Node agents — [docs/cli.md](docs/cli.md) |
+| **MCP server** | `mcp/server.mjs` | Two tools (`user_profile`, `numerology_query`) over stdio for Claude Code / Cursor / Pi — [docs/mcp.md](docs/mcp.md) |
+| **The Chart** | `app/` | Pi SDK planning agent that turns cycle data into dated decisions — [docs/app.md](docs/app.md) |
+
+```bash
+npm install && npm run build
+node tool/numerology-cli.mjs profile '{}'
+npm run app -- --dry        # timing brief without a model
+```
+
+Background: [architecture](docs/architecture.md) ·
+[numerology rules in plain English](docs/numerology-rules.md) ·
+[how an agent should call these](docs/agent-integration.md)
 
 ![Daily Energy web widget](docs/preview-desktop.png)
 
@@ -127,8 +148,8 @@ This is a real native App Widget, not a browser shortcut.
    - **Daily Energy** — a 4×2 card with today's primary/secondary/combined
      energy and `LP`. If you resize it to three or more rows, the compact
      `LP / UY / UM / PY / PM` line appears.
-   - **Daily Energy Calendar** — a 4×4 card with a month calendar you can move
-     with ‹ / ›, today's energy, `LP`, and the four timing cycles above it.
+   - **Daily Energy Calendar** — a 4×4 card with five rolling days you can move
+     with ‹ / ›, plus today's energy, `LP`, and the four timing cycles.
 
 Tap either card to open the full-screen app; tap **↻** to refresh immediately.
 The widgets update themselves at 12:01 a.m. local time, with a 30-minute system

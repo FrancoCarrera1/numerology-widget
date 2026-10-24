@@ -23,3 +23,7 @@ android/**/build/
 android/.idea/
 android/*.iml
 android/.kotlin/
+
+# Generated agent output
+weekly-timing-brief.md
+briefs/

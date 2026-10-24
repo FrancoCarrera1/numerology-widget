@@ -125,6 +125,22 @@ To exercise the app without a model: node app/index.mjs --dry
 
 Exit code 2. Nothing is written.
 
+## SDK notes (resolved from the installed package, not guessed)
+
+`@earendil-works/pi-coding-agent` v1.4.0:
+
+- `createAgentSession({ resourceLoader, modelRuntime, cwd, sessionManager, customTools, tools })`
+- `defineTool({ name, label, description, parameters, execute })` — `parameters` is a
+  TypeBox schema; `execute(toolCallId, params, signal, onUpdate, ctx)` returns
+  `{ content: [{type:'text',text}], details, isError? }`
+- `DefaultResourceLoader` requires `cwd` and `agentDir`; without them it throws on
+  `undefined.startsWith` while resolving the agent dir.
+- The app passes `tools: ['read','write']` (no bash/edit) and `noContextFiles: true`
+  so repo AGENTS.md files cannot silently join the prompt.
+
+Without provider credentials, `session.prompt()` throws "No API key found for the
+selected model" — the app converts that into exit 2 plus a pointer to `--dry`.
+
 ## Extending it
 
 - **New tool:** add a `defineTool` entry in `buildTools()`. Give it a TypeBox

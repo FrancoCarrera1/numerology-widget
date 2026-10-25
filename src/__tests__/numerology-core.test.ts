@@ -364,6 +364,20 @@ describe('timing cycles', () => {
     expect(full.personalMonth?.displayValue).toBe('11');
   });
 
+  it('anchors the personal month to the birth day, so a late-month birthday can read the prior month', () => {
+    // The month flips on the birth day, not on the 1st: that is what makes it
+    // *personal*. On 25 October a day-31 birthday is still inside the window
+    // that opened 30 September, so September's number applies (3 + 9 = 12 -> 3).
+    // Personal month equalling personal year is therefore expected here, not a
+    // collapsed cycle. Do not "fix" it by switching to the calendar month.
+    const late = { month: 7, day: 31 };
+    const cycles = calculateCycleEnergies('2026-10-25', late);
+    expect(cycles.personalYear?.displayValue).toBe('3');
+    expect(cycles.personalMonth?.displayValue).toBe('3');
+    expect(cycles.personalMonth?.startDate).toBe('2026-09-30');
+    expect(cycles.personalMonth?.dateLabel).toContain('Sep 30');
+  });
+
   it('accepts MM-DD birthdays for the desktop widget', () => {
     expect(parseBirthdayInput('05-23')).toEqual({ month: 5, day: 23 });
     expect(parseBirthdayInput('1990-05-23')).toEqual({ month: 5, day: 23 });

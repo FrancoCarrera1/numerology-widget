@@ -577,7 +577,10 @@ export function calculatePersonalMonth(
   const birthday = parseBirthdayInput(birthdayInput);
   const personalYear = calculatePersonalYear(reference, birthday);
 
-  // Most recent birth-day transition on or before the reference date.
+  // The month flips on the birth day, not on the 1st — that is what makes it
+  // personal. A late-month birthday is therefore still inside the previous
+  // month's window for most of the calendar month, and the personal month can
+  // legitimately equal the personal year (3 + 9 = 12 -> 3). Not a bug.
   let startYear = reference.getFullYear();
   let startMonth = reference.getMonth() + 1;
   let start = birthdayInYear(

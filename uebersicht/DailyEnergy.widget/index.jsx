@@ -79,6 +79,13 @@ const writeSelected = (id) => {
  * the single-birthday behaviour above. Birthdays are read at runtime and never
  * baked into this file.
  */
+const cycleOf = (person, key) => {
+  const cycles = person && person.cycles;
+  if (!cycles) return '\u2014';
+  const value = cycles[key];
+  return value === undefined || value === null || value === '' ? '\u2014' : value;
+};
+
 const parseRoster = (output) => {
   try {
     const parsed = JSON.parse(String(output || ''));
@@ -723,7 +730,8 @@ export const render = (
                   {person.primary ? <span style={rosterBadge}>primary</span> : null}
                 </span>
                 <span style={rosterMeta}>
-                  LP {person.life_path} · {person.full_date_energy} + {person.secondary_energy}
+                  LP {person.life_path} · PY {cycleOf(person, 'personal_year')} · PM{' '}
+                  {cycleOf(person, 'personal_month')}
                 </span>
               </button>
             );

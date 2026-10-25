@@ -44,6 +44,7 @@ const {
   generateMonthlySchedule,
   formatDateKey,
   reduceToSingleDigit,
+  getEasternZodiac,
 } = core;
 
 const BIRTH_DATE = '2003-05-23';
@@ -178,7 +179,7 @@ function parseInvocation(argv) {
 }
 
 function entryPayload(entry) {
-  const { person, lifePath, fullDateEnergy, secondaryEnergy, combinedKey, cycles } = entry;
+  const { person, zodiac, lifePath, fullDateEnergy, secondaryEnergy, combinedKey, cycles } = entry;
 
   return {
     id: person.id,
@@ -187,6 +188,19 @@ function entryPayload(entry) {
     tags: [...person.tags],
     notes: person.notes,
     primary: person.primary,
+    zodiac: zodiac
+      ? {
+          animal: zodiac.animal,
+          element: zodiac.element,
+          polarity: zodiac.polarity,
+          display: zodiac.display,
+          year_name: zodiac.yearName,
+          lunar_year: zodiac.year,
+          cycle_position: zodiac.cyclePosition,
+          boundary: zodiac.boundary,
+          note: zodiac.note,
+        }
+      : null,
     life_path: lifePath.displayValue,
     life_path_underlying: lifePath.underlyingNumber,
     life_path_is_master: lifePath.isMaster,
@@ -237,9 +251,11 @@ function formatEntry(entry) {
   const personalYear = entry.cycles.personalYear?.displayValue ?? '—';
   const personalMonth = entry.cycles.personalMonth?.displayValue ?? '—';
 
+  const zodiac = entry.zodiac ? `${entry.zodiac.display} · ` : '';
+
   return [
-    `${person.name}${personTag(person)} · Life Path ${entry.lifePath.displayValue}${lifePathNote(entry.lifePath)}`,
-    `  ${entry.fullDateEnergy.displayValue} + ${entry.secondaryEnergy.displayValue} · ${entry.combinedKey} · PY ${personalYear} · PM ${personalMonth}`,
+    `${person.name}${personTag(person)} · ${zodiac}Life Path ${entry.lifePath.displayValue}${lifePathNote(entry.lifePath)}`,
+    `  ${entry.combinedKey} · PY ${personalYear} · PM ${personalMonth}`,
   ].join('\n');
 }
 
@@ -259,6 +275,7 @@ function personText(date, entry) {
   const lines = [
     `${person.name}${personTag(person)}`,
     `  Birthdate  ${person.birthdate}`,
+    `  Zodiac     ${entry.zodiac.display} · ${entry.zodiac.yearName} · ${entry.zodiac.note}`,
     `  Life Path  ${entry.lifePath.displayValue}${lifePathNote(entry.lifePath)} · ${entry.lifePath.summary}`,
     `  ${entry.lifePath.calculationNote}`,
     '',
@@ -320,6 +337,7 @@ switch (mode) {
   case 'date_energy': {
     if (!args.date) fail('date_energy requires {"date":"YYYY-MM-DD"}');
     const r = calculateNumerologyEnergies(args.date);
+    const zodiac = getEasternZodiac(args.date);
     out({
       ok: true,
       mode,
@@ -328,6 +346,15 @@ switch (mode) {
       secondary_energy: r.secondaryEnergy.displayValue,
       combined: r.combinedKey,
       publish_eligible: publishEligible(args.date),
+      year_zodiac: {
+        display: zodiac.display,
+        animal: zodiac.animal,
+        element: zodiac.element,
+        polarity: zodiac.polarity,
+        year_name: zodiac.yearName,
+        lunar_year: zodiac.year,
+        cycle_position: zodiac.cyclePosition,
+      },
     });
     break;
   }

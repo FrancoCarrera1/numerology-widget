@@ -20,6 +20,7 @@ import {
   type LifePathResult,
   type SecondaryEnergyResult
 } from './numerology-core';
+import { getEasternZodiac, type EasternZodiac } from './eastern-zodiac';
 
 export interface Person {
   id: string;
@@ -47,6 +48,8 @@ export interface AddPersonInput {
 
 export interface PersonEnergies {
   person: Person;
+  /** Chinese zodiac from the birth year, with the Lunar New Year boundary applied. */
+  zodiac: EasternZodiac;
   lifePath: LifePathResult;
   fullDateEnergy: FullDateEnergyResult;
   secondaryEnergy: SecondaryEnergyResult;
@@ -314,6 +317,7 @@ export function buildPersonEnergies(
 
   return {
     person,
+    zodiac: getEasternZodiac(person.birthdate),
     lifePath: calculateLifePath(person.birthdate),
     fullDateEnergy: daily.fullDateEnergy,
     secondaryEnergy: daily.secondaryEnergy,

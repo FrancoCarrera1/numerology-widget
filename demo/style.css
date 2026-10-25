@@ -318,6 +318,16 @@ numerology-widget {
   text-transform: uppercase;
 }
 
+.roster-zodiac {
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  color: var(--accent, #d97a2b);
+  border: 1px solid color-mix(in srgb, var(--accent, #d97a2b) 45%, transparent);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  white-space: nowrap;
+}
+
 .roster-tags {
   flex: 1 1 100%;
   overflow: hidden;

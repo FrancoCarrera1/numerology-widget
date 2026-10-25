@@ -1095,4 +1095,8 @@ export const numerologyCore = {
   SPECIAL_NUMBERS
 };
 
+// The Chinese calendar layer sits beside the numerology engine: same input
+// (a date), same promise (no hand-rolled arithmetic).
+export * from './eastern-zodiac';
+
 export default numerologyCore;

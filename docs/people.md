@@ -123,11 +123,64 @@ The static web demo has no server (by design), so its roster is stored in
 are intentionally not synced; use the CLI/MCP for the local file, or the web
 form for the browser copy.
 
-The demo shows one row per person with name, Life Path, full-date energy and
-secondary energy. The primary row is pinned and visually marked. Selecting a row
+The demo shows one row per person with name, eastern zodiac chip, Life Path,
+full-date energy and secondary energy. The primary row is pinned and visually
+marked. Selecting a row
 opens that person in the existing `<numerology-widget>` detail card with today,
 this week, cycles, calendar, and the next five favourable days. Add/edit uses a
 native date picker plus name, tags and notes fields.
+
+## Eastern zodiac
+
+Every person also carries a Chinese zodiac derived from their birth year. It is
+computed in `src/eastern-zodiac.ts` and reached through the same person objects,
+so the roster, the CLI, the MCP tools and the web client cannot disagree.
+
+Two independent axes, in the standard 60-year cycle:
+
+- **Animal** = the Earthly Branch (12), 1984 = Rat.
+- **Element and polarity** = the Heavenly Stem (10), 1984 = Yang Wood.
+
+`2003-05-23` is Water Goat (癸未), cycle position 20. Element is *not* derived
+from the animal; Water Goat and Wood Goat are twelve years apart.
+
+The year turns over at **Lunar New Year**, not 1 January.
+
+Chinese New Year is lunisolar: it falls on the second new moon after the winter
+solstice, which puts it between 21 January and 20 February. The date is
+astronomical — the moment of the new moon is computed, then placed against the
+calendar's rules for months and leap months — which is why it moves on the
+Western calendar. New moons and solstices can be computed centuries ahead, so
+future dates are known rather than guessed; a year far out can always be
+confirmed against an astronomical almanac, and it can shift by a day with time
+zone.
+
+The lunar year comes from the platform calendar
+(`Intl.DateTimeFormat('en-u-ca-chinese')`), which carries those new-moon dates.
+Dates resolve at 12:00 UTC so a birthday near midnight cannot land on the wrong
+side of the date line. `1985-02-10` resolves to lunar 1984, Wood Rat, because
+that year's new year fell on 20 February.
+
+`src/__tests__/eastern-zodiac.test.ts` holds the rule to account: every new year
+from 1950 to 2050 is asserted to fall inside that 21 January – 20 February
+window, with 2023-01-22 and 2024-02-10 pinned. If ICU has no
+Chinese calendar, the module falls back to the Gregorian year and sets
+`boundary: 'gregorian'` on the result instead of pretending it is exact.
+
+Surfaces:
+
+- `getEasternZodiac(date)` and `easternZodiacForYear(year)` from the core package
+  (`src/eastern-zodiac.ts`, re-exported by `numerology-core`).
+- `person.zodiac` on every roster entry and `entryPayload`.
+- `year_zodiac` on `date_energy`, the zodiac of that date's lunar year.
+- `person` and `roster` MCP tools return it inside the same payloads.
+- The web roster shows an element-and-animal chip; the detail meta shows the
+  traditional name (e.g. 癸未).
+- `row` carries Goat; Sheep and Ram are the same branch and some traditions use
+  those names (`GOAT_ALIASES`).
+
+Nothing here touches reduction: the zodiac is calendar arithmetic, not
+numerology, and it never feeds a Life Path or a daily energy.
 
 ## Native ports
 
@@ -136,16 +189,30 @@ priority and the native ports should not block it.
 
 ### macOS / Übersicht
 
-1. Extend `scripts/build-uebersicht.mjs` to read `data/people.json` when present
-   and inject a sanitized `PEOPLE` array next to the existing `BIRTHDAY`
-   fallback. Never copy the file into git.
-2. Keep an in-widget localStorage override for edits, matching the web roster
-   shape (`people`, `primary`).
-3. Render a compact roster above the existing detail card; primary first.
-4. Reuse the bundled `NumerologyCore` for `calculateLifePath`,
-   `calculateNumerologyEnergies`, and `calculateCycleEnergies`. Do not port the
-   people calculations to JSX.
-5. The existing single Birthday control becomes the primary person's editor.
+**Implemented, read-only by design.** The widget shows the roster and switches
+between people; it never writes a birthday. Editing happens in the CLI or
+through an agent, which is the point: one storage path, one set of rules.
+
+1. `scripts/build-uebersicht.mjs` injects a **command**, not data:
+   `node tool/numerology-cli.mjs roster --json`. The widget re-runs it every 60s
+   and parses the payload.
+   Nothing is baked in, so a build cannot copy a friend's birthday into the
+   tracked `index.jsx`. The only date in that file is the empty `BIRTHDAY`
+   fallback.
+2. `parseRoster(output)` accepts that JSON and falls back to the old `date +%s`
+   epoch, so an older build, a missing people file, or a broken CLI leaves the
+   single-birthday widget working exactly as before.
+3. A compact roster sits above the detail card, primary first. Clicking a row
+   dispatches `SELECT_PERSON`, which stores the id in `localStorage` and makes
+   that person the active birthdate — the life path, cycles and calendar then
+   follow from the same engine calls as before.
+4. The primary is the default view when nothing has been picked, matching the
+   single-user behaviour.
+5. With a roster present the Birthday control becomes a read-only label
+   (`from data/people.json`); the editable form only appears when there is no
+   roster.
+6. Zodiac comes through in the roster payload (`person.zodiac.display`) and is
+   used as the row's tooltip next to the life path.
 
 ### Android
 
@@ -154,6 +221,11 @@ priority and the native ports should not block it.
    `birthday` key into one primary person on first read.
 2. Add `PersonStore.kt` with list/get/add/remove/setPrimary and slug/id rules
    matching `src/people-model.ts`.
+2b. Add `EasternZodiac.kt` with the same stem/branch tables and the same
+   `java.time.chrono.ChineseChronology` year lookup for the Lunar New Year
+   boundary. Do not hard-code an animal from the Gregorian year: January
+   birthdays would be wrong. Pin the same fixtures used by
+   `src/__tests__/eastern-zodiac.test.ts`.
 3. Add a roster activity/screen: one row per person (name, Life Path, full-date
    energy, secondary), primary pinned. Use the existing date picker for
    add/edit.

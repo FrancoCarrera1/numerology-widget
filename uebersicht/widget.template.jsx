@@ -52,7 +52,46 @@ const initialBirthday = (() => {
   }
 })();
 
+const SELECTED_KEY = 'daily-energy-selected-person';
+
+const readSelected = () => {
+  try {
+    return localStorage.getItem(SELECTED_KEY);
+  } catch {
+    return null;
+  }
+};
+
+const writeSelected = (id) => {
+  try {
+    if (id) localStorage.setItem(SELECTED_KEY, id);
+    else localStorage.removeItem(SELECTED_KEY);
+  } catch {
+    // Private mode or a locked store: selection just won't persist.
+  }
+};
+
+/**
+ * The command prints the CLI's `roster --json` payload. If that fails (no
+ * people file, node moved, CLI missing) it prints nothing and we fall back to
+ * the single-birthday behaviour above. Birthdays are read at runtime and never
+ * baked into this file.
+ */
+const parseRoster = (output) => {
+  try {
+    const parsed = JSON.parse(String(output || ''));
+    if (parsed && parsed.ok && Array.isArray(parsed.people)) return parsed;
+  } catch {
+    // Not JSON: older builds printed an epoch.
+  }
+  return null;
+};
+
 const dateFromOutput = (output) => {
+  const roster = parseRoster(output);
+  if (roster && /^\d{4}-\d{2}-\d{2}$/.test(String(roster.date || ''))) {
+    return new Date(`${roster.date}T12:00:00`);
+  }
   const seconds = parseInt(output, 10);
   return Number.isFinite(seconds) ? new Date(seconds * 1000) : new Date();
 };
@@ -76,12 +115,13 @@ const RULE = 'rgba(212, 175, 55, 0.22)';
 const SERIF = "'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif";
 const MONO = "'SF Mono', Menlo, Monaco, 'Courier New', monospace";
 
-export const command = 'date +%s';
+export const command = __ROSTER_COMMAND__;
 export const refreshFrequency = 60000;
 
 export const initialState = {
   output: '',
   error: null,
+  selectedId: readSelected(),
   birthday: initialBirthday,
   calendarMonth: null,
   editing: false,
@@ -91,6 +131,11 @@ export const initialState = {
 
 export const updateState = (event, previousState) => {
   switch (event.type) {
+    case 'SELECT_PERSON': {
+      const id = typeof event.id === 'string' ? event.id : null;
+      writeSelected(id);
+      return { ...previousState, selectedId: id, editing: false, draft: '', formError: null };
+    }
     case 'BIRTHDAY_EDIT':
       return {
         ...previousState,
@@ -185,6 +230,73 @@ const label = {
   textTransform: 'uppercase',
   color: MUTED,
   fontFamily: SERIF
+};
+
+const rosterPanel = {
+  marginTop: '12px',
+  paddingTop: '10px',
+  borderTop: `1px solid ${RULE}`,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '2px',
+  maxHeight: '150px',
+  overflowY: 'auto'
+};
+
+const rosterHint = {
+  marginLeft: '7px',
+  fontSize: '8px',
+  letterSpacing: '0.08em',
+  textTransform: 'none',
+  color: 'rgba(154, 144, 122, 0.75)',
+  fontFamily: MONO
+};
+
+const rosterRow = {
+  display: 'flex',
+  alignItems: 'baseline',
+  justifyContent: 'space-between',
+  gap: '8px',
+  padding: '4px 6px',
+  background: 'transparent',
+  border: '1px solid transparent',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  font: 'inherit',
+  color: 'inherit',
+  textAlign: 'left',
+  width: '100%'
+};
+
+const rosterRowActive = {
+  ...rosterRow,
+  borderColor: RULE,
+  background: 'rgba(212, 175, 55, 0.09)'
+};
+
+const rosterName = {
+  display: 'inline-flex',
+  alignItems: 'baseline',
+  gap: '5px',
+  color: PAPER,
+  fontSize: '11.5px'
+};
+
+const rosterBadge = {
+  fontSize: '7.5px',
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: GOLD,
+  border: `1px solid ${RULE}`,
+  borderRadius: '3px',
+  padding: '0 3px'
+};
+
+const rosterMeta = {
+  fontSize: '9.5px',
+  color: MUTED,
+  fontFamily: MONO,
+  whiteSpace: 'nowrap'
 };
 
 const card = {
@@ -516,7 +628,7 @@ const footer = {
 };
 
 export const render = (
-  { output, error, birthday, calendarMonth, editing, draft, formError: birthdayError },
+  { output, error, birthday, selectedId, calendarMonth, editing, draft, formError: birthdayError },
   dispatch
 ) => {
   if (error) {
@@ -532,23 +644,32 @@ export const render = (
   const now = Number.isFinite(seconds) ? new Date(seconds * 1000) : new Date();
   const energies = NumerologyCore.calculateNumerologyEnergies(now);
   const todayKey = NumerologyCore.formatDateKey(now);
-  const cycles = NumerologyCore.calculateCycleEnergies(todayKey, birthday || null);
   const month = NumerologyCore.generateMonthlyCalendar(calendarMonth || todayKey);
   const isCurrentMonth =
     month.year === now.getFullYear() && month.month === now.getMonth();
   const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  // People come from the CLI at runtime (data/people.json). Primary first, and
+  // the primary is the default view when nothing has been picked.
+  const roster = parseRoster(output);
+  const people = roster && roster.people.length ? roster.people : null;
+  const picked = people && selectedId ? people.find((person) => person.id === selectedId) : null;
+  const active = picked || (people ? people[0] : null);
+  const activeBirthday = active ? active.birthdate : birthday;
+  const showRoster = Boolean(people);
+  const cycles = NumerologyCore.calculateCycleEnergies(todayKey, activeBirthday || null);
+
   const lifePath = (() => {
-    if (!birthday) return null;
+    if (!activeBirthday) return null;
     try {
-      return NumerologyCore.calculateLifePath(birthday);
+      return NumerologyCore.calculateLifePath(activeBirthday);
     } catch {
       return null;
     }
   })();
   const lifePathStatus = lifePath
     ? lifePath.summary
-    : birthday
+    : activeBirthday
       ? 'Add birth year'
       : 'Set birthday';
   const lifePathDetail = lifePath
@@ -559,7 +680,7 @@ export const render = (
         : lifePath.total === lifePath.reducedNumber
           ? `${lifePath.total} · master number`
           : `${lifePath.monthValue} + ${lifePath.dayValue} + ${lifePath.yearValue} = ${lifePath.total} → ${lifePath.displayValue}`
-    : birthday
+    : activeBirthday
       ? 'Life Path needs the full date'
       : 'Full birth date unlocks it';
 
@@ -574,6 +695,39 @@ export const render = (
           {now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
         </div>
       </div>
+
+      {showRoster ? (
+        <div style={rosterPanel}>
+          <div style={{ ...label, marginBottom: '5px' }}>
+            People
+            <span style={rosterHint}>data/people.json</span>
+          </div>
+          {people.map((person) => {
+            const isActive = active ? person.id === active.id : false;
+            return (
+              <button
+                key={person.id}
+                type="button"
+                style={isActive ? rosterRowActive : rosterRow}
+                title={
+                  person.zodiac && person.zodiac.display
+                    ? `${person.name} · ${person.zodiac.display} · Life Path ${person.life_path}`
+                    : `${person.name} · Life Path ${person.life_path}`
+                }
+                onClick={() => dispatch({ type: 'SELECT_PERSON', id: person.id })}
+              >
+                <span style={rosterName}>
+                  {person.name}
+                  {person.primary ? <span style={rosterBadge}>primary</span> : null}
+                </span>
+                <span style={rosterMeta}>
+                  LP {person.life_path} · {person.full_date_energy} + {person.secondary_energy}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
 
       <div style={lifePathRow} title={lifePath ? lifePath.calculationNote : undefined}>
         <div>
@@ -627,6 +781,7 @@ export const render = (
         </div>
       </div>
 
+      {showRoster ? null : (
       <div style={birthdayRow}>
         <span style={label}>Birthday</span>
         {editing ? (
@@ -675,6 +830,7 @@ export const render = (
           </div>
         )}
       </div>
+      )}
       {birthdayError ? <div style={formError}>{birthdayError}</div> : null}
 
       <div style={calendar}>

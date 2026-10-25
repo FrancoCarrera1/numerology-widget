@@ -75,7 +75,7 @@ const TOOLS = [
   {
     name: 'roster',
     description:
-      'Everyone in the local people roster with life path, full-date energy, secondary energy, combined key and timing cycles. Primary person first. Optional date and tag filter.',
+      'Everyone in the local people roster with Eastern zodiac (animal, element, polarity, 60-year cycle position), life path, full-date energy, secondary energy, combined key and timing cycles. Primary person first. Optional date and tag filter.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -88,7 +88,7 @@ const TOOLS = [
   {
     name: 'person',
     description:
-      'One person from the roster: life path, a chosen date\'s energies, and universal/personal cycles. Use roster first to discover ids.',
+      'One person from the roster: Eastern zodiac, life path, a chosen date\'s energies, and universal/personal cycles. Use roster first to discover ids.',
     inputSchema: {
       type: 'object',
       required: ['id'],

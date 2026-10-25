@@ -141,13 +141,16 @@ export function mountPeopleRoster({ widget, datePicker, todayButton }: MountOpti
         ? `<span class="roster-tags">${escapeHtml(person.tags.join(' · '))}</span>`
         : '';
 
+      const zodiacLine = `<span class="roster-zodiac">${escapeHtml(entry.zodiac.display)}</span>`;
+
       return `
         <article class="${classes}" data-person-id="${escapeHtml(person.id)}" role="button" tabindex="0"
-                 aria-label="${escapeHtml(person.name)}${person.primary ? ', primary' : ''}. Life path ${escapeHtml(entry.lifePath.displayValue)}. Today ${escapeHtml(entry.fullDateEnergy.displayValue)} plus ${escapeHtml(entry.secondaryEnergy.displayValue)}.">
+                 aria-label="${escapeHtml(person.name)}${person.primary ? ', primary' : ''}. ${escapeHtml(entry.zodiac.display)}. Life path ${escapeHtml(entry.lifePath.displayValue)}. Today ${escapeHtml(entry.fullDateEnergy.displayValue)} plus ${escapeHtml(entry.secondaryEnergy.displayValue)}.">
           <div class="roster-main">
             <div class="roster-identity">
               <span class="roster-name">${escapeHtml(person.name)}</span>
               ${person.primary ? '<span class="primary-badge">Primary</span>' : ''}
+              ${zodiacLine}
               ${tagLine}
             </div>
             <div class="roster-stats">
@@ -186,6 +189,7 @@ export function mountPeopleRoster({ widget, datePicker, todayButton }: MountOpti
     detailTitle.textContent = person.name;
 
     const meta = [
+      `<span>${escapeHtml(energies.zodiac.display)} · ${escapeHtml(energies.zodiac.yearName)}</span>`,
       `<span>Life Path ${escapeHtml(energies.lifePath.displayValue)} · ${escapeHtml(energies.lifePath.summary)}</span>`,
       person.tags.length ? `<span>${escapeHtml(person.tags.join(' · '))}</span>` : '',
       person.notes ? `<span class="detail-note">${escapeHtml(person.notes)}</span>` : ''

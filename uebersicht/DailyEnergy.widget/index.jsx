@@ -5,8 +5,8 @@
  * DailyEnergy.widget/index.jsx directly; edit this template and rebuild.
  */
 
-"use strict";var NumerologyCore=(()=>{var Y=Object.defineProperty;var X=Object.getOwnPropertyDescriptor;var Z=Object.getOwnPropertyNames;var ee=Object.prototype.hasOwnProperty;var te=(t,e)=>{for(var r in e)Y(t,r,{get:e[r],enumerable:!0})},re=(t,e,r,n)=>{if(e&&typeof e=="object"||typeof e=="function")for(let o of Z(e))!ee.call(t,o)&&o!==r&&Y(t,o,{get:()=>e[o],enumerable:!(n=X(e,o))||n.enumerable});return t};var ne=t=>re(Y({},"__esModule",{value:!0}),t);var le={};te(le,{calculateCycleEnergies:()=>W,calculateFullDateEnergy:()=>P,calculateLifePath:()=>k,calculateNumerologyEnergies:()=>S,calculatePersonalMonth:()=>B,calculatePersonalYear:()=>x,calculateSecondaryEnergy:()=>v,calculateUniversalMonth:()=>L,calculateUniversalYear:()=>R,default:()=>oe,formatDateKey:()=>p,generateMonthlyCalendar:()=>H,generateMonthlySchedule:()=>F,generateWeeklySchedule:()=>j,getEnergiesForDate:()=>J,getEnergyStatisticalKey:()=>A,getSecondaryEnergyStatisticalKey:()=>_,getTodayEnergies:()=>z,getTomorrowEnergies:()=>G,isMasterNumber:()=>O,isSpecialNumber:()=>q,numerologyCore:()=>Q,parseBirthDateInput:()=>V,parseBirthdayInput:()=>w,parseDateInput:()=>f,reduceCycleNumber:()=>b,reduceToSingleDigit:()=>N});var y=new Set([11,22,33]),U=new Set([20,28]);function N(t){if(y.has(t))return t;for(;t>9&&(t=h(t),!y.has(t)););return t}function h(t){return t.toString().split("").reduce((e,r)=>e+parseInt(r,10),0)}function p(t){let e=t.getFullYear(),r=String(t.getMonth()+1).padStart(2,"0"),n=String(t.getDate()).padStart(2,"0");return`${e}-${r}-${n}`}function f(t){let e=typeof t=="string"?new Date(`${t}T00:00:00`):new Date(t);if(isNaN(e.getTime()))throw new Error("Invalid date provided");return e}function b(t){if(!Number.isFinite(t))throw new Error("Invalid number provided");let e=Math.abs(Math.trunc(t)),r=e;for(;r>9&&!y.has(r);)r=h(r);return r===2?{originalSum:e,reducedNumber:11,displayValue:"11",calculationNote:`${e} \u2192 2; timing cycles read 2 as 11`}:{originalSum:e,reducedNumber:r,displayValue:String(r),calculationNote:y.has(r)?`${e}; ${r} is a master number and stays whole`:`${e} \u2192 ${r}`}}function w(t){let e,r;if(typeof t=="string"){let o=t.trim();if(/^\d{1,2}-\d{1,2}$/.test(o)){let[l,a]=o.split("-").map(Number);e=l,r=a}else{let l=f(o);e=l.getMonth()+1,r=l.getDate()}}else if(t instanceof Date){if(isNaN(t.getTime()))throw new Error("Invalid birthday provided");e=t.getMonth()+1,r=t.getDate()}else e=t.month,r=t.day;if(!Number.isInteger(e)||e<1||e>12)throw new Error("Birthday month must be between 1 and 12");if(!Number.isInteger(r)||r<1||r>31)throw new Error("Birthday day must be between 1 and 31");if(new Date(2e3,e-1,r).getMonth()!==e-1)throw new Error("Invalid birthday day for the selected month");return{month:e,day:r}}function V(t){let e,r,n;if(typeof t=="string"){let a=t.trim(),s=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(a);if(!s)throw new Error("Life Path needs a full birth date (YYYY-MM-DD)");e=Number(s[1]),r=Number(s[2]),n=Number(s[3])}else if(t instanceof Date){if(isNaN(t.getTime()))throw new Error("Invalid birth date provided");e=t.getFullYear(),r=t.getMonth()+1,n=t.getDate()}else throw new Error("Invalid birth date provided");if(!Number.isInteger(e)||e<1e3||e>9999)throw new Error("Birth year must be a four-digit year");let o=w({month:r,day:n}),l=new Date(e,r-1,n);if(l.getFullYear()!==e||l.getMonth()!==r-1||l.getDate()!==n)throw new Error("Invalid birth date provided");return{year:e,month:o.month,day:o.day}}var ae={1:"Initiator and leader",3:"Creative communicator",4:"Builder and foundation",5:"Explorer and freedom seeker",6:"Protector and nurturer",7:"Seeker and analyst",8:"Achiever and abundance",9:"Humanitarian and completion",11:"Intuitive teacher",22:"Master builder",33:"Master teacher",28:"Wealth Life Path \xB7 1 underneath"};function I(t){let e=t;for(;e>9&&!y.has(e);)e=h(e);return e}function k(t){let{year:e,month:r,day:n}=V(t),o=I(r),l=I(n),a=h(e),s=o+l+a,i,m=null,d;if(s===28)i=28,m=1,d="28 is the Wealth Life Path; 1 underneath";else{let c=s,D=[s];for(;c>9&&!y.has(c);)c=h(c),D.push(c);c===2&&(c=11,D.push(11)),i=c,m=c===11?2:c===22?4:c===33?6:null;let C=c===11&&D[D.length-2]===2;d=D.length>1?`${D.join(" \u2192 ")}${C?"; 2 reads as 11":""}`:y.has(c)?`${c} is a master number and stays whole`+(m?`; ${m} underneath`:""):`${c}`}let u=`Month ${r} \u2192 ${o} \xB7 Day ${n} \u2192 ${l} \xB7 Year ${e} digits = ${a}. ${o} + ${l} + ${a} = ${s}; ${d}`;return{birthday:`${e}-${String(r).padStart(2,"0")}-${String(n).padStart(2,"0")}`,month:r,day:n,year:e,monthValue:o,dayValue:l,yearValue:a,total:s,reducedNumber:i,displayValue:String(i),underlyingNumber:m,isMaster:y.has(i),isWealth:i===28,summary:ae[i]||"Life Path",calculationNote:u}}function $(t,e){let r=new Date(t,e.month,0).getDate();return new Date(t,e.month-1,Math.min(e.day,r))}function T(t){return new Date(t.getFullYear(),t.getMonth(),t.getDate())}function K(t,e){return t.getFullYear()===e.getFullYear()?`${t.toLocaleDateString("en-US",{month:"short",day:"numeric"})} \u2013 ${e.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`:`${t.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} \u2013 ${e.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`}function E(t,e,r,n){return{...t,startDate:p(e),endDate:p(r),dateLabel:n}}function R(t){let e=0;for(let r of String(t))e+=Number(r);return E(b(e),new Date(t,0,1),new Date(t+1,0,1),String(t))}function L(t){let e=f(t),r=e.getFullYear(),n=e.getMonth()+1,o=R(r),l=b(n),a=b(o.reducedNumber+l.reducedNumber),s=new Date(r,n-1,1),i=new Date(r,n,1);return E(a,s,i,e.toLocaleDateString("en-US",{month:"long",year:"numeric"}))}function x(t,e){let r=T(f(t)),n=w(e),o=r.getFullYear(),l=$(o,n),a=r>=l?o:o-1,s=$(a,n),i=$(a+1,n),m=h(n.month)+h(n.day)+h(a),d=b(m);return E(d,s,i,K(s,i))}function B(t,e){let r=T(f(t)),n=w(e),o=x(r,n),l=r.getFullYear(),a=r.getMonth()+1,s=$(l,{month:a,day:n.day});s>r&&(a-=1,a===0&&(a=12,l-=1),s=$(l,{month:a,day:n.day}));let i=a===12?1:a+1,m=a===12?l+1:l,d=$(m,{month:i,day:n.day}),u=b(a),c=b(o.reducedNumber+u.reducedNumber);return E(c,s,d,K(s,d))}function W(t,e){let r=f(t),n=R(r.getFullYear()),o=L(r);return e?{universalYear:n,universalMonth:o,personalYear:x(r,e),personalMonth:B(r,e)}:{universalYear:n,universalMonth:o,personalYear:null,personalMonth:null}}function P(t){let e=t.getMonth()+1,r=t.getDate(),o=t.getFullYear().toString().split("").map(g=>parseInt(g,10)),l=o.reduce((g,M)=>g+M,0),a=y.has(e)?e:h(e),s=y.has(r)?r:h(r),i=a+s+l,m;i===28?m=28:y.has(i)||i<=9?m=i:m=N(i);let d=m===2?11:m,u=e+r+l;if(u===20)return{originalSum:u,reducedNumber:11,displayValue:"20/2",calculationNote:`${e} + ${r} + ${o.join("+")} = ${u} (special: 20 = 11 numerologically)`,summary:"20 reduces to 11"};if(u===d){let g=u;if(u%10===0&&u!==20)g=u/10;else if(u>9&&!y.has(u)&&u!==28){let M=N(u);y.has(M)&&(g=M)}return{originalSum:u,reducedNumber:g,displayValue:g.toString(),calculationNote:`Both methods agree: ${a}+${s}+${l} = ${i}${g!==u?` (${u}\u2192${g})`:""}`,summary:"Both methods agree"}}let c=u;if(u%10===0&&u!==20)c=u/10;else if(u>9&&!y.has(u)&&u!==28){let g=N(u);y.has(g),c=g}if(c===d)return{originalSum:u,reducedNumber:d,displayValue:d.toString(),calculationNote:`Both methods agree after reduction: ${u} \u2192 ${c}`,summary:"Both methods agree"};let D=Math.min(c,d),C=Math.max(c,d);return{originalSum:u,reducedNumber:d,displayValue:`${D}/${C}`,calculationNote:`Method 1: ${a}+${s}+${l} = ${i} \u2192 ${d}; Method 2: ${e}+${r}+${l} = ${u} \u2192 ${c}`,summary:`Method 1: ${d}
-Method 2: ${c}`}}function v(t){let e=t.getDate();if(e===2)return{originalDay:e,reducedNumber:11,displayValue:"11",note:"Day 2nd = 11 energy"};if(e===20)return{originalDay:e,reducedNumber:11,displayValue:"20/2",note:"Day 20th = 20/2 (numerologically 11)"};if(y.has(e))return{originalDay:e,reducedNumber:e,displayValue:e.toString(),note:"Master number day"};let r=N(e);return{originalDay:e,reducedNumber:r,displayValue:r.toString()}}function S(t){let e=f(t),r=P(e),n=v(e);return{date:e,fullDateEnergy:r,secondaryEnergy:n,combinedKey:`${r.displayValue} + ${n.displayValue}`,formattedDate:e.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}}function A(t){let e=t.fullDateEnergy.displayValue;return e==="20/2"?"11":e}function _(t){return t.secondaryEnergy.reducedNumber.toString()}function j(t){let e=[],r=new Date(t+"T00:00:00");for(let n=0;n<7;n++){let o=new Date(r);o.setDate(r.getDate()+n);let l=S(o);e.push({date:p(o),dayNumber:o.getDate(),dayName:o.toLocaleDateString("en-US",{weekday:"long"}),formattedDate:o.toLocaleDateString("en-US",{month:"short",day:"2-digit",year:"numeric"}),fullDateEnergy:l.fullDateEnergy.displayValue,secondaryEnergy:l.secondaryEnergy.displayValue,combinedKey:l.combinedKey,numerology:l})}return e}function F(t){let e=[],r=new Date(t+"T00:00:00"),n=r.getFullYear(),o=r.getMonth(),l=new Date(n,o+1,0);for(let a=1;a<=l.getDate();a++){let s=new Date(n,o,a),i=S(s);e.push({date:p(s),dayNumber:a,dayName:s.toLocaleDateString("en-US",{weekday:"long"}),formattedDate:s.toLocaleDateString("en-US",{month:"short",day:"2-digit",year:"numeric"}),fullDateEnergy:i.fullDateEnergy.displayValue,secondaryEnergy:i.secondaryEnergy.displayValue,combinedKey:i.combinedKey,numerology:i})}return e}function H(t){let e=f(t),r=F(p(e)),n=[],o=new Date(`${r[0].date}T00:00:00`).getDay();for(let a=0;a<o;a++)n.push({date:null,dayNumber:null,schedule:null});for(let a of r)n.push({date:a.date,dayNumber:a.dayNumber,schedule:a});for(;n.length%7!==0;)n.push({date:null,dayNumber:null,schedule:null});let l=[];for(let a=0;a<n.length;a+=7)l.push(n.slice(a,a+7));return{year:e.getFullYear(),month:e.getMonth(),monthLabel:e.toLocaleDateString("en-US",{month:"long",year:"numeric"}),weeks:l,days:r}}function O(t){return y.has(t)}function q(t){return U.has(t)}function z(){return S(new Date)}function G(){let t=new Date;return t.setDate(t.getDate()+1),S(t)}function J(t){return S(t)}var Q={reduceToSingleDigit:N,calculateFullDateEnergy:P,calculateSecondaryEnergy:v,calculateNumerologyEnergies:S,getEnergyStatisticalKey:A,getSecondaryEnergyStatisticalKey:_,generateWeeklySchedule:j,generateMonthlySchedule:F,generateMonthlyCalendar:H,reduceCycleNumber:b,parseBirthdayInput:w,parseBirthDateInput:V,calculateLifePath:k,calculateUniversalYear:R,calculateUniversalMonth:L,calculatePersonalYear:x,calculatePersonalMonth:B,calculateCycleEnergies:W,isMasterNumber:O,isSpecialNumber:q,formatDateKey:p,parseDateInput:f,getTodayEnergies:z,getTomorrowEnergies:G,getEnergiesForDate:J,MASTER_NUMBERS:y,SPECIAL_NUMBERS:U},oe=Q;return ne(le);})();
+"use strict";var NumerologyCore=(()=>{var F=Object.defineProperty;var ne=Object.getOwnPropertyDescriptor;var ae=Object.getOwnPropertyNames;var oe=Object.prototype.hasOwnProperty;var le=(t,e)=>{for(var r in e)F(t,r,{get:e[r],enumerable:!0})},ie=(t,e,r,n)=>{if(e&&typeof e=="object"||typeof e=="function")for(let a of ae(e))!oe.call(t,a)&&a!==r&&F(t,a,{get:()=>e[a],enumerable:!(n=ne(e,a))||n.enumerable});return t};var se=t=>ie(F({},"__esModule",{value:!0}),t);var be={};le(be,{GOAT_ALIASES:()=>de,calculateCycleEnergies:()=>H,calculateFullDateEnergy:()=>B,calculateLifePath:()=>Z,calculateNumerologyEnergies:()=>S,calculatePersonalMonth:()=>v,calculatePersonalYear:()=>C,calculateSecondaryEnergy:()=>I,calculateUniversalMonth:()=>L,calculateUniversalYear:()=>Y,default:()=>he,easternZodiacForYear:()=>W,formatDateKey:()=>p,generateMonthlyCalendar:()=>J,generateMonthlySchedule:()=>T,generateWeeklySchedule:()=>z,getEasternZodiac:()=>me,getEnergiesForDate:()=>te,getEnergyStatisticalKey:()=>G,getSecondaryEnergyStatisticalKey:()=>O,getTodayEnergies:()=>X,getTomorrowEnergies:()=>ee,isMasterNumber:()=>q,isSpecialNumber:()=>Q,numerologyCore:()=>re,parseBirthDateInput:()=>V,parseBirthdayInput:()=>E,parseDateInput:()=>b,reduceCycleNumber:()=>D,reduceToSingleDigit:()=>$,resolveLunarYear:()=>k});var ue=[["Wood","yang","\u7532","jia"],["Wood","yin","\u4E59","yi"],["Fire","yang","\u4E19","bing"],["Fire","yin","\u4E01","ding"],["Earth","yang","\u620A","wu"],["Earth","yin","\u5DF1","ji"],["Metal","yang","\u5E9A","geng"],["Metal","yin","\u8F9B","xin"],["Water","yang","\u58EC","ren"],["Water","yin","\u7678","gui"]],ce=[["Rat","\u5B50","zi"],["Ox","\u4E11","chou"],["Tiger","\u5BC5","yin"],["Rabbit","\u536F","mao"],["Dragon","\u8FB0","chen"],["Snake","\u5DF3","si"],["Horse","\u5348","wu"],["Goat","\u672A","wei"],["Monkey","\u7533","shen"],["Rooster","\u9149","you"],["Dog","\u620C","xu"],["Pig","\u4EA5","hai"]],de=["Sheep","Ram"];function M(t,e){return(t%e+e)%e}function U(t){if(t instanceof Date)return t;let e=String(t).trim();if(!/^\d{4}-\d{2}-\d{2}$/.test(e))throw new Error(`Invalid date "${e}": expected YYYY-MM-DD`);return new Date(`${e}T12:00:00Z`)}var x=null;function ye(){if(x)return x;try{return x=new Intl.DateTimeFormat("en-u-ca-chinese",{year:"numeric"}),x}catch(t){return null}}function k(t){let e=U(t),r=ye();try{if(!r)throw new Error("no chinese calendar");let n=r.formatToParts(e).find(l=>String(l.type)==="relatedYear"),a=n?Number.parseInt(n.value,10):Number.NaN;if(Number.isFinite(a))return{year:a,boundary:"lunar"}}catch(n){}return{year:e.getUTCFullYear(),boundary:"gregorian"}}function W(t){if(!Number.isInteger(t))throw new Error(`Invalid year "${String(t)}": expected an integer`);let[e,r,n,a]=ue[M(t-4,10)],[l,o,i]=ce[M(t-4,12)];return{year:t,gregorianYear:t,stem:n,stemPinyin:a,element:e,polarity:r,branch:o,branchPinyin:i,animal:l,cyclePosition:M(t-4,60)+1,yearName:`${n}${o}`,display:`${e} ${l}`,boundary:"gregorian",note:`${e} ${l}, ${r}. Year ${t}, cycle position ${M(t-4,60)+1} of 60.`}}function me(t){let e=U(t),{year:r,boundary:n}=k(e),a=W(r);return{...a,gregorianYear:e.getUTCFullYear(),boundary:n,note:n==="lunar"?`${a.element} ${a.animal}, ${a.polarity}. Lunar year ${r}, cycle position ${a.cyclePosition} of 60.`:`${a.element} ${a.animal}, ${a.polarity}. Gregorian year ${r}: the Chinese calendar is unavailable here, so a January or early-February birthday may belong to the previous animal.`}}var y=new Set([11,22,33]),K=new Set([20,28]);function $(t){if(y.has(t))return t;for(;t>9&&(t=h(t),!y.has(t)););return t}function h(t){return t.toString().split("").reduce((e,r)=>e+parseInt(r,10),0)}function p(t){let e=t.getFullYear(),r=String(t.getMonth()+1).padStart(2,"0"),n=String(t.getDate()).padStart(2,"0");return`${e}-${r}-${n}`}function b(t){let e=typeof t=="string"?new Date(`${t}T00:00:00`):new Date(t);if(isNaN(e.getTime()))throw new Error("Invalid date provided");return e}function D(t){if(!Number.isFinite(t))throw new Error("Invalid number provided");let e=Math.abs(Math.trunc(t)),r=e;for(;r>9&&!y.has(r);)r=h(r);return r===2?{originalSum:e,reducedNumber:11,displayValue:"11",calculationNote:`${e} \u2192 2; timing cycles read 2 as 11`}:{originalSum:e,reducedNumber:r,displayValue:String(r),calculationNote:y.has(r)?`${e}; ${r} is a master number and stays whole`:`${e} \u2192 ${r}`}}function E(t){let e,r;if(typeof t=="string"){let a=t.trim();if(/^\d{1,2}-\d{1,2}$/.test(a)){let[l,o]=a.split("-").map(Number);e=l,r=o}else{let l=b(a);e=l.getMonth()+1,r=l.getDate()}}else if(t instanceof Date){if(isNaN(t.getTime()))throw new Error("Invalid birthday provided");e=t.getMonth()+1,r=t.getDate()}else e=t.month,r=t.day;if(!Number.isInteger(e)||e<1||e>12)throw new Error("Birthday month must be between 1 and 12");if(!Number.isInteger(r)||r<1||r>31)throw new Error("Birthday day must be between 1 and 31");if(new Date(2e3,e-1,r).getMonth()!==e-1)throw new Error("Invalid birthday day for the selected month");return{month:e,day:r}}function V(t){let e,r,n;if(typeof t=="string"){let o=t.trim(),i=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(o);if(!i)throw new Error("Life Path needs a full birth date (YYYY-MM-DD)");e=Number(i[1]),r=Number(i[2]),n=Number(i[3])}else if(t instanceof Date){if(isNaN(t.getTime()))throw new Error("Invalid birth date provided");e=t.getFullYear(),r=t.getMonth()+1,n=t.getDate()}else throw new Error("Invalid birth date provided");if(!Number.isInteger(e)||e<1e3||e>9999)throw new Error("Birth year must be a four-digit year");let a=E({month:r,day:n}),l=new Date(e,r-1,n);if(l.getFullYear()!==e||l.getMonth()!==r-1||l.getDate()!==n)throw new Error("Invalid birth date provided");return{year:e,month:a.month,day:a.day}}var ge={1:"Initiator and leader",3:"Creative communicator",4:"Builder and foundation",5:"Explorer and freedom seeker",6:"Protector and nurturer",7:"Seeker and analyst",8:"Achiever and abundance",9:"Humanitarian and completion",11:"Intuitive teacher",22:"Master builder",33:"Master teacher",28:"Wealth Life Path \xB7 1 underneath"};function A(t){let e=t;for(;e>9&&!y.has(e);)e=h(e);return e}function Z(t){let{year:e,month:r,day:n}=V(t),a=A(r),l=A(n),o=h(e),i=a+l+o,u,m=null,d;if(i===28)u=28,m=1,d="28 is the Wealth Life Path; 1 underneath";else{let c=i,f=[i];for(;c>9&&!y.has(c);)c=h(c),f.push(c);c===2&&(c=11,f.push(11)),u=c,m=c===11?2:c===22?4:c===33?6:null;let P=c===11&&f[f.length-2]===2;d=f.length>1?`${f.join(" \u2192 ")}${P?"; 2 reads as 11":""}`:y.has(c)?`${c} is a master number and stays whole`+(m?`; ${m} underneath`:""):`${c}`}let s=`Month ${r} \u2192 ${a} \xB7 Day ${n} \u2192 ${l} \xB7 Year ${e} digits = ${o}. ${a} + ${l} + ${o} = ${i}; ${d}`;return{birthday:`${e}-${String(r).padStart(2,"0")}-${String(n).padStart(2,"0")}`,month:r,day:n,year:e,monthValue:a,dayValue:l,yearValue:o,total:i,reducedNumber:u,displayValue:String(u),underlyingNumber:m,isMaster:y.has(u),isWealth:u===28,summary:ge[u]||"Life Path",calculationNote:s}}function N(t,e){let r=new Date(t,e.month,0).getDate();return new Date(t,e.month-1,Math.min(e.day,r))}function _(t){return new Date(t.getFullYear(),t.getMonth(),t.getDate())}function j(t,e){return t.getFullYear()===e.getFullYear()?`${t.toLocaleDateString("en-US",{month:"short",day:"numeric"})} \u2013 ${e.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`:`${t.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} \u2013 ${e.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`}function R(t,e,r,n){return{...t,startDate:p(e),endDate:p(r),dateLabel:n}}function Y(t){let e=0;for(let r of String(t))e+=Number(r);return R(D(e),new Date(t,0,1),new Date(t+1,0,1),String(t))}function L(t){let e=b(t),r=e.getFullYear(),n=e.getMonth()+1,a=Y(r),l=D(n),o=D(a.reducedNumber+l.reducedNumber),i=new Date(r,n-1,1),u=new Date(r,n,1);return R(o,i,u,e.toLocaleDateString("en-US",{month:"long",year:"numeric"}))}function C(t,e){let r=_(b(t)),n=E(e),a=r.getFullYear(),l=N(a,n),o=r>=l?a:a-1,i=N(o,n),u=N(o+1,n),m=h(n.month)+h(n.day)+h(o),d=D(m);return R(d,i,u,j(i,u))}function v(t,e){let r=_(b(t)),n=E(e),a=C(r,n),l=r.getFullYear(),o=r.getMonth()+1,i=N(l,{month:o,day:n.day});i>r&&(o-=1,o===0&&(o=12,l-=1),i=N(l,{month:o,day:n.day}));let u=o===12?1:o+1,m=o===12?l+1:l,d=N(m,{month:u,day:n.day}),s=D(o),c=D(a.reducedNumber+s.reducedNumber);return R(c,i,d,j(i,d))}function H(t,e){let r=b(t),n=Y(r.getFullYear()),a=L(r);return e?{universalYear:n,universalMonth:a,personalYear:C(r,e),personalMonth:v(r,e)}:{universalYear:n,universalMonth:a,personalYear:null,personalMonth:null}}function B(t){let e=t.getMonth()+1,r=t.getDate(),a=t.getFullYear().toString().split("").map(g=>parseInt(g,10)),l=a.reduce((g,w)=>g+w,0),o=y.has(e)?e:h(e),i=y.has(r)?r:h(r),u=o+i+l,m;u===28?m=28:y.has(u)||u<=9?m=u:m=$(u);let d=m===2?11:m,s=e+r+l;if(s===20)return{originalSum:s,reducedNumber:11,displayValue:"20/2",calculationNote:`${e} + ${r} + ${a.join("+")} = ${s} (special: 20 = 11 numerologically)`,summary:"20 reduces to 11"};if(s===d){let g=s;if(s%10===0&&s!==20)g=s/10;else if(s>9&&!y.has(s)&&s!==28){let w=$(s);y.has(w)&&(g=w)}return{originalSum:s,reducedNumber:g,displayValue:g.toString(),calculationNote:`Both methods agree: ${o}+${i}+${l} = ${u}${g!==s?` (${s}\u2192${g})`:""}`,summary:"Both methods agree"}}let c=s;if(s%10===0&&s!==20)c=s/10;else if(s>9&&!y.has(s)&&s!==28){let g=$(s);y.has(g),c=g}if(c===d)return{originalSum:s,reducedNumber:d,displayValue:d.toString(),calculationNote:`Both methods agree after reduction: ${s} \u2192 ${c}`,summary:"Both methods agree"};let f=Math.min(c,d),P=Math.max(c,d);return{originalSum:s,reducedNumber:d,displayValue:`${f}/${P}`,calculationNote:`Method 1: ${o}+${i}+${l} = ${u} \u2192 ${d}; Method 2: ${e}+${r}+${l} = ${s} \u2192 ${c}`,summary:`Method 1: ${d}
+Method 2: ${c}`}}function I(t){let e=t.getDate();if(e===2)return{originalDay:e,reducedNumber:11,displayValue:"11",note:"Day 2nd = 11 energy"};if(e===20)return{originalDay:e,reducedNumber:11,displayValue:"20/2",note:"Day 20th = 20/2 (numerologically 11)"};if(y.has(e))return{originalDay:e,reducedNumber:e,displayValue:e.toString(),note:"Master number day"};let r=$(e);return{originalDay:e,reducedNumber:r,displayValue:r.toString()}}function S(t){let e=b(t),r=B(e),n=I(e);return{date:e,fullDateEnergy:r,secondaryEnergy:n,combinedKey:`${r.displayValue} + ${n.displayValue}`,formattedDate:e.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}}function G(t){let e=t.fullDateEnergy.displayValue;return e==="20/2"?"11":e}function O(t){return t.secondaryEnergy.reducedNumber.toString()}function z(t){let e=[],r=new Date(t+"T00:00:00");for(let n=0;n<7;n++){let a=new Date(r);a.setDate(r.getDate()+n);let l=S(a);e.push({date:p(a),dayNumber:a.getDate(),dayName:a.toLocaleDateString("en-US",{weekday:"long"}),formattedDate:a.toLocaleDateString("en-US",{month:"short",day:"2-digit",year:"numeric"}),fullDateEnergy:l.fullDateEnergy.displayValue,secondaryEnergy:l.secondaryEnergy.displayValue,combinedKey:l.combinedKey,numerology:l})}return e}function T(t){let e=[],r=new Date(t+"T00:00:00"),n=r.getFullYear(),a=r.getMonth(),l=new Date(n,a+1,0);for(let o=1;o<=l.getDate();o++){let i=new Date(n,a,o),u=S(i);e.push({date:p(i),dayNumber:o,dayName:i.toLocaleDateString("en-US",{weekday:"long"}),formattedDate:i.toLocaleDateString("en-US",{month:"short",day:"2-digit",year:"numeric"}),fullDateEnergy:u.fullDateEnergy.displayValue,secondaryEnergy:u.secondaryEnergy.displayValue,combinedKey:u.combinedKey,numerology:u})}return e}function J(t){let e=b(t),r=T(p(e)),n=[],a=new Date(`${r[0].date}T00:00:00`).getDay();for(let o=0;o<a;o++)n.push({date:null,dayNumber:null,schedule:null});for(let o of r)n.push({date:o.date,dayNumber:o.dayNumber,schedule:o});for(;n.length%7!==0;)n.push({date:null,dayNumber:null,schedule:null});let l=[];for(let o=0;o<n.length;o+=7)l.push(n.slice(o,o+7));return{year:e.getFullYear(),month:e.getMonth(),monthLabel:e.toLocaleDateString("en-US",{month:"long",year:"numeric"}),weeks:l,days:r}}function q(t){return y.has(t)}function Q(t){return K.has(t)}function X(){return S(new Date)}function ee(){let t=new Date;return t.setDate(t.getDate()+1),S(t)}function te(t){return S(t)}var re={reduceToSingleDigit:$,calculateFullDateEnergy:B,calculateSecondaryEnergy:I,calculateNumerologyEnergies:S,getEnergyStatisticalKey:G,getSecondaryEnergyStatisticalKey:O,generateWeeklySchedule:z,generateMonthlySchedule:T,generateMonthlyCalendar:J,reduceCycleNumber:D,parseBirthdayInput:E,parseBirthDateInput:V,calculateLifePath:Z,calculateUniversalYear:Y,calculateUniversalMonth:L,calculatePersonalYear:C,calculatePersonalMonth:v,calculateCycleEnergies:H,isMasterNumber:q,isSpecialNumber:Q,formatDateKey:p,parseDateInput:b,getTodayEnergies:X,getTomorrowEnergies:ee,getEnergiesForDate:te,MASTER_NUMBERS:y,SPECIAL_NUMBERS:K},he=re;return se(be);})();
 
 
 // Default birthday used for Life Path and Personal Year/Month. Set
@@ -54,7 +54,46 @@ const initialBirthday = (() => {
   }
 })();
 
+const SELECTED_KEY = 'daily-energy-selected-person';
+
+const readSelected = () => {
+  try {
+    return localStorage.getItem(SELECTED_KEY);
+  } catch {
+    return null;
+  }
+};
+
+const writeSelected = (id) => {
+  try {
+    if (id) localStorage.setItem(SELECTED_KEY, id);
+    else localStorage.removeItem(SELECTED_KEY);
+  } catch {
+    // Private mode or a locked store: selection just won't persist.
+  }
+};
+
+/**
+ * The command prints the CLI's `roster --json` payload. If that fails (no
+ * people file, node moved, CLI missing) it prints nothing and we fall back to
+ * the single-birthday behaviour above. Birthdays are read at runtime and never
+ * baked into this file.
+ */
+const parseRoster = (output) => {
+  try {
+    const parsed = JSON.parse(String(output || ''));
+    if (parsed && parsed.ok && Array.isArray(parsed.people)) return parsed;
+  } catch {
+    // Not JSON: older builds printed an epoch.
+  }
+  return null;
+};
+
 const dateFromOutput = (output) => {
+  const roster = parseRoster(output);
+  if (roster && /^\d{4}-\d{2}-\d{2}$/.test(String(roster.date || ''))) {
+    return new Date(`${roster.date}T12:00:00`);
+  }
   const seconds = parseInt(output, 10);
   return Number.isFinite(seconds) ? new Date(seconds * 1000) : new Date();
 };
@@ -78,12 +117,13 @@ const RULE = 'rgba(212, 175, 55, 0.22)';
 const SERIF = "'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif";
 const MONO = "'SF Mono', Menlo, Monaco, 'Courier New', monospace";
 
-export const command = 'date +%s';
+export const command = "'/opt/homebrew/bin/node' '/Users/franco/Documents/git/numerology-widget/tool/numerology-cli.mjs' roster --json 2>/dev/null";
 export const refreshFrequency = 60000;
 
 export const initialState = {
   output: '',
   error: null,
+  selectedId: readSelected(),
   birthday: initialBirthday,
   calendarMonth: null,
   editing: false,
@@ -93,6 +133,11 @@ export const initialState = {
 
 export const updateState = (event, previousState) => {
   switch (event.type) {
+    case 'SELECT_PERSON': {
+      const id = typeof event.id === 'string' ? event.id : null;
+      writeSelected(id);
+      return { ...previousState, selectedId: id, editing: false, draft: '', formError: null };
+    }
     case 'BIRTHDAY_EDIT':
       return {
         ...previousState,
@@ -187,6 +232,73 @@ const label = {
   textTransform: 'uppercase',
   color: MUTED,
   fontFamily: SERIF
+};
+
+const rosterPanel = {
+  marginTop: '12px',
+  paddingTop: '10px',
+  borderTop: `1px solid ${RULE}`,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '2px',
+  maxHeight: '150px',
+  overflowY: 'auto'
+};
+
+const rosterHint = {
+  marginLeft: '7px',
+  fontSize: '8px',
+  letterSpacing: '0.08em',
+  textTransform: 'none',
+  color: 'rgba(154, 144, 122, 0.75)',
+  fontFamily: MONO
+};
+
+const rosterRow = {
+  display: 'flex',
+  alignItems: 'baseline',
+  justifyContent: 'space-between',
+  gap: '8px',
+  padding: '4px 6px',
+  background: 'transparent',
+  border: '1px solid transparent',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  font: 'inherit',
+  color: 'inherit',
+  textAlign: 'left',
+  width: '100%'
+};
+
+const rosterRowActive = {
+  ...rosterRow,
+  borderColor: RULE,
+  background: 'rgba(212, 175, 55, 0.09)'
+};
+
+const rosterName = {
+  display: 'inline-flex',
+  alignItems: 'baseline',
+  gap: '5px',
+  color: PAPER,
+  fontSize: '11.5px'
+};
+
+const rosterBadge = {
+  fontSize: '7.5px',
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: GOLD,
+  border: `1px solid ${RULE}`,
+  borderRadius: '3px',
+  padding: '0 3px'
+};
+
+const rosterMeta = {
+  fontSize: '9.5px',
+  color: MUTED,
+  fontFamily: MONO,
+  whiteSpace: 'nowrap'
 };
 
 const card = {
@@ -518,7 +630,7 @@ const footer = {
 };
 
 export const render = (
-  { output, error, birthday, calendarMonth, editing, draft, formError: birthdayError },
+  { output, error, birthday, selectedId, calendarMonth, editing, draft, formError: birthdayError },
   dispatch
 ) => {
   if (error) {
@@ -534,23 +646,32 @@ export const render = (
   const now = Number.isFinite(seconds) ? new Date(seconds * 1000) : new Date();
   const energies = NumerologyCore.calculateNumerologyEnergies(now);
   const todayKey = NumerologyCore.formatDateKey(now);
-  const cycles = NumerologyCore.calculateCycleEnergies(todayKey, birthday || null);
   const month = NumerologyCore.generateMonthlyCalendar(calendarMonth || todayKey);
   const isCurrentMonth =
     month.year === now.getFullYear() && month.month === now.getMonth();
   const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  // People come from the CLI at runtime (data/people.json). Primary first, and
+  // the primary is the default view when nothing has been picked.
+  const roster = parseRoster(output);
+  const people = roster && roster.people.length ? roster.people : null;
+  const picked = people && selectedId ? people.find((person) => person.id === selectedId) : null;
+  const active = picked || (people ? people[0] : null);
+  const activeBirthday = active ? active.birthdate : birthday;
+  const showRoster = Boolean(people);
+  const cycles = NumerologyCore.calculateCycleEnergies(todayKey, activeBirthday || null);
+
   const lifePath = (() => {
-    if (!birthday) return null;
+    if (!activeBirthday) return null;
     try {
-      return NumerologyCore.calculateLifePath(birthday);
+      return NumerologyCore.calculateLifePath(activeBirthday);
     } catch {
       return null;
     }
   })();
   const lifePathStatus = lifePath
     ? lifePath.summary
-    : birthday
+    : activeBirthday
       ? 'Add birth year'
       : 'Set birthday';
   const lifePathDetail = lifePath
@@ -561,7 +682,7 @@ export const render = (
         : lifePath.total === lifePath.reducedNumber
           ? `${lifePath.total} · master number`
           : `${lifePath.monthValue} + ${lifePath.dayValue} + ${lifePath.yearValue} = ${lifePath.total} → ${lifePath.displayValue}`
-    : birthday
+    : activeBirthday
       ? 'Life Path needs the full date'
       : 'Full birth date unlocks it';
 
@@ -576,6 +697,39 @@ export const render = (
           {now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
         </div>
       </div>
+
+      {showRoster ? (
+        <div style={rosterPanel}>
+          <div style={{ ...label, marginBottom: '5px' }}>
+            People
+            <span style={rosterHint}>data/people.json</span>
+          </div>
+          {people.map((person) => {
+            const isActive = active ? person.id === active.id : false;
+            return (
+              <button
+                key={person.id}
+                type="button"
+                style={isActive ? rosterRowActive : rosterRow}
+                title={
+                  person.zodiac && person.zodiac.display
+                    ? `${person.name} · ${person.zodiac.display} · Life Path ${person.life_path}`
+                    : `${person.name} · Life Path ${person.life_path}`
+                }
+                onClick={() => dispatch({ type: 'SELECT_PERSON', id: person.id })}
+              >
+                <span style={rosterName}>
+                  {person.name}
+                  {person.primary ? <span style={rosterBadge}>primary</span> : null}
+                </span>
+                <span style={rosterMeta}>
+                  LP {person.life_path} · {person.full_date_energy} + {person.secondary_energy}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
 
       <div style={lifePathRow} title={lifePath ? lifePath.calculationNote : undefined}>
         <div>
@@ -629,6 +783,7 @@ export const render = (
         </div>
       </div>
 
+      {showRoster ? null : (
       <div style={birthdayRow}>
         <span style={label}>Birthday</span>
         {editing ? (
@@ -677,6 +832,7 @@ export const render = (
           </div>
         )}
       </div>
+      )}
       {birthdayError ? <div style={formError}>{birthdayError}</div> : null}
 
       <div style={calendar}>

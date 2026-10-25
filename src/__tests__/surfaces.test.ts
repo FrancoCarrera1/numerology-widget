@@ -378,3 +378,48 @@ describe('MCP surface', () => {
     expect(res.result.isError).toBe(true);
   });
 });
+
+
+describe('eastern zodiac surfaces', () => {
+  it('carries the zodiac in roster payloads, one per person', () => {
+    const roster = cli('roster', { date: '2026-10-23' });
+
+    expect(roster.people.map((person: { zodiac: { display: string } }) => person.zodiac.display)).toEqual([
+      'Water Goat',
+      'Water Rabbit',
+      'Fire Horse',
+      'Wood Pig'
+    ]);
+    expect(roster.people[2].zodiac.lunar_year).toBe(1846);
+    expect(roster.people[0].zodiac.year_name).toBe('癸未');
+  });
+
+  it('carries the zodiac in a single person payload', () => {
+    const person = cli('person', { id: 'gary', date: '2026-10-23' });
+
+    expect(person.person.zodiac.display).toBe('Water Rabbit');
+    expect(person.person.zodiac.cycle_position).toBe(40);
+    expect(person.person.zodiac.boundary).toBe('lunar');
+  });
+
+  it('reports the year zodiac on date_energy', () => {
+    const out = cli('date_energy', { date: '2003-05-23' });
+
+    expect(out.year_zodiac.display).toBe('Water Goat');
+    expect(out.year_zodiac.lunar_year).toBe(2003);
+    expect(out.year_zodiac.cycle_position).toBe(20);
+  });
+
+  it('exposes the zodiac through the MCP roster tool', () => {
+    const res = mcp({
+      jsonrpc: '2.0',
+      id: 9,
+      method: 'tools/call',
+      params: { name: 'roster', arguments: { date: '2026-10-23' } }
+    });
+    const payload = JSON.parse(res.result.content[0].text);
+
+    expect(payload.people[0].zodiac.display).toBe('Water Goat');
+    expect(payload.people[1].zodiac.display).toBe('Water Rabbit');
+  });
+});

@@ -386,7 +386,7 @@ describe('eastern zodiac surfaces', () => {
 
     expect(roster.people.map((person: { zodiac: { display: string } }) => person.zodiac.display)).toEqual([
       'Water Goat',
-      'Water Rabbit',
+      'Water Cat',
       'Fire Horse',
       'Wood Pig'
     ]);
@@ -397,7 +397,7 @@ describe('eastern zodiac surfaces', () => {
   it('carries the zodiac in a single person payload', () => {
     const person = cli('person', { id: 'gary', date: '2026-10-23' });
 
-    expect(person.person.zodiac.display).toBe('Water Rabbit');
+    expect(person.person.zodiac.display).toBe('Water Cat');
     expect(person.person.zodiac.cycle_position).toBe(40);
     expect(person.person.zodiac.boundary).toBe('lunar');
   });
@@ -420,6 +420,6 @@ describe('eastern zodiac surfaces', () => {
     const payload = JSON.parse(res.result.content[0].text);
 
     expect(payload.people[0].zodiac.display).toBe('Water Goat');
-    expect(payload.people[1].zodiac.display).toBe('Water Rabbit');
+    expect(payload.people[1].zodiac.display).toBe('Water Cat');
   });
 });

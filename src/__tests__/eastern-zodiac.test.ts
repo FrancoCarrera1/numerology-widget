@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  CAT_ALIASES,
   easternZodiacForYear,
   getEasternZodiac,
   resolveLunarYear
@@ -17,7 +18,7 @@ const fixtures: Array<[string, string, string, number, number]> = [
   ['2000-11-07', 'Metal Dragon', '庚辰', 2000, 17],
   ['1935-02-08', 'Wood Pig', '乙亥', 1935, 12],
   ['1847-02-11', 'Fire Horse', '丙午', 1846, 43],
-  ['1963-02-17', 'Water Rabbit', '癸卯', 1963, 40],
+  ['1963-02-17', 'Water Cat', '癸卯', 1963, 40],
   ['2026-10-25', 'Fire Horse', '丙午', 2026, 43]
 ];
 
@@ -44,8 +45,8 @@ describe('lunar new year boundary', () => {
   it('turns over on the actual new year day, not 1 January', () => {
     // 2023 new year: 22 January. 2024 new year: 10 February.
     expect(getEasternZodiac('2023-01-21').display).toBe('Water Tiger');
-    expect(getEasternZodiac('2023-02-01').display).toBe('Water Rabbit');
-    expect(getEasternZodiac('2024-02-09').display).toBe('Water Rabbit');
+    expect(getEasternZodiac('2023-02-01').display).toBe('Water Cat');
+    expect(getEasternZodiac('2024-02-09').display).toBe('Water Cat');
     expect(getEasternZodiac('2024-02-10').display).toBe('Wood Dragon');
   });
 
@@ -148,7 +149,11 @@ describe('the new year rule', () => {
 
   it('keeps the previous animal for the whole day before the flip', () => {
     const eve = new Date('2024-02-09T12:00:00Z');
-    expect(getEasternZodiac(eve).animal).toBe('Rabbit');
+    expect(getEasternZodiac(eve).animal).toBe('Cat');
+
+    // 卯 is the Cat in GG33; Rabbit is the mainland Chinese name for the same
+    // branch and stays accepted as an alias.
+    expect(CAT_ALIASES).toContain('Rabbit');
     expect(getEasternZodiac('2024-02-10').animal).toBe('Dragon');
   });
 });

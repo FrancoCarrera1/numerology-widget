@@ -72,7 +72,7 @@ const BRANCHES: ReadonlyArray<readonly [string, string, string]> = [
   ['Rat', '子', 'zi'],
   ['Ox', '丑', 'chou'],
   ['Tiger', '寅', 'yin'],
-  ['Rabbit', '卯', 'mao'],
+  ['Cat', '卯', 'mao'],
   ['Dragon', '辰', 'chen'],
   ['Snake', '巳', 'si'],
   ['Horse', '午', 'wu'],
@@ -85,6 +85,14 @@ const BRANCHES: ReadonlyArray<readonly [string, string, string]> = [
 
 /** Calendars that render Goat as Sheep or Ram. Kept here so callers can note it. */
 export const GOAT_ALIASES = ['Sheep', 'Ram'] as const;
+
+/**
+ * 卯 is the Cat here. The mainland Chinese calendar calls that branch the
+ * Rabbit; the Vietnamese one, and GG33, call it the Cat. Same branch, same
+ * stem, same cycle position — only the name differs, so Rabbit is accepted as
+ * an alias rather than a second animal.
+ */
+export const CAT_ALIASES = ['Rabbit', 'Hare'] as const;
 
 function mod(value: number, base: number): number {
   return ((value % base) + base) % base;

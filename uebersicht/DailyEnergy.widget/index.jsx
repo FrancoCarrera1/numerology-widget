@@ -114,12 +114,12 @@ const shiftMonthKey = (key, delta) => {
   return firstOfMonthKey(new Date(base.getFullYear(), base.getMonth() + delta, 1));
 };
 
-const GOLD = '#d4af37';
-const GOLD_LIGHT = '#e8c56d';
-const BRONZE = '#cd7f32';
-const PAPER = '#efe6cf';
-const MUTED = '#9a907a';
-const RULE = 'rgba(212, 175, 55, 0.22)';
+const GOLD = '#e0a93c';
+const GOLD_LIGHT = '#f2e9d8';
+const BRONZE = '#d97a2b';
+const PAPER = '#f2e9d8';
+const MUTED = 'rgba(242, 233, 216, 0.58)';
+const RULE = 'rgba(224, 169, 60, 0.30)';
 
 const SERIF = "'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif";
 const MONO = "'SF Mono', Menlo, Monaco, 'Courier New', monospace";
@@ -257,7 +257,7 @@ const rosterHint = {
   fontSize: '8px',
   letterSpacing: '0.08em',
   textTransform: 'none',
-  color: 'rgba(154, 144, 122, 0.75)',
+  color: 'rgba(242, 233, 216, 0.75)',
   fontFamily: MONO
 };
 
@@ -280,7 +280,7 @@ const rosterRow = {
 const rosterRowActive = {
   ...rosterRow,
   borderColor: RULE,
-  background: 'rgba(212, 175, 55, 0.09)'
+  background: 'rgba(224, 169, 60, 0.09)'
 };
 
 const rosterName = {
@@ -309,11 +309,11 @@ const rosterMeta = {
 };
 
 const card = {
-  background: 'rgba(15, 14, 11, 0.86)',
+  background: 'rgba(8, 37, 68, 0.92)',
   border: `1px solid ${RULE}`,
   borderRadius: '18px',
   padding: '18px 20px 16px',
-  boxShadow: '0 18px 50px rgba(0, 0, 0, 0.55), 0 0 40px rgba(212, 175, 55, 0.08)',
+  boxShadow: '0 18px 50px rgba(4, 18, 33, 0.55), 0 0 40px rgba(224, 169, 60, 0.08)',
   backdropFilter: 'blur(18px) saturate(130%)',
   WebkitBackdropFilter: 'blur(18px) saturate(130%)',
   color: PAPER,
@@ -358,7 +358,7 @@ const lifePathValue = {
   lineHeight: '1',
   fontWeight: 500,
   color: GOLD,
-  textShadow: '0 0 22px rgba(212, 175, 55, 0.3)'
+  textShadow: '0 0 22px rgba(224, 169, 60, 0.3)'
 };
 
 const lifePathSummary = {
@@ -389,7 +389,7 @@ const primaryValue = {
   lineHeight: '1',
   fontWeight: 500,
   color: GOLD,
-  textShadow: '0 0 30px rgba(212, 175, 55, 0.35)'
+  textShadow: '0 0 30px rgba(224, 169, 60, 0.35)'
 };
 
 const secondaryValue = {
@@ -398,7 +398,7 @@ const secondaryValue = {
   lineHeight: '1.05',
   fontWeight: 500,
   color: BRONZE,
-  textShadow: '0 0 24px rgba(205, 127, 50, 0.3)'
+  textShadow: '0 0 24px rgba(217, 122, 43, 0.3)'
 };
 
 const note = {
@@ -417,7 +417,7 @@ const combined = {
   border: `1px solid ${RULE}`,
   borderRadius: '10px',
   padding: '9px 12px',
-  background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(205, 127, 50, 0.03))'
+  background: 'linear-gradient(135deg, rgba(224, 169, 60, 0.08), rgba(217, 122, 43, 0.03))'
 };
 
 const combinedValue = {
@@ -437,7 +437,7 @@ const cycleCell = (personal) => ({
   padding: '6px 8px 7px',
   borderRadius: '8px',
   border: `1px solid ${RULE}`,
-  background: personal ? 'rgba(205, 127, 50, 0.05)' : 'rgba(212, 175, 55, 0.05)'
+  background: personal ? 'rgba(217, 122, 43, 0.05)' : 'rgba(224, 169, 60, 0.05)'
 });
 
 const cycleLabel = {
@@ -490,7 +490,7 @@ const birthdayInput = {
   padding: '3px 6px',
   borderRadius: '5px',
   border: `1px solid ${RULE}`,
-  background: 'rgba(212, 175, 55, 0.08)',
+  background: 'rgba(224, 169, 60, 0.08)',
   color: PAPER,
   fontFamily: MONO,
   fontSize: '10px',
@@ -514,7 +514,7 @@ const formError = {
   marginTop: '4px',
   fontFamily: MONO,
   fontSize: '8px',
-  color: '#ff9b9b'
+  color: '#d97a2b'
 };
 
 const calendar = {
@@ -594,8 +594,8 @@ const dayCell = (isToday) => ({
   padding: '3px 1px 2px',
   borderRadius: '6px',
   border: `1px solid ${isToday ? GOLD : 'transparent'}`,
-  background: isToday ? 'rgba(212, 175, 55, 0.1)' : 'transparent',
-  boxShadow: isToday ? '0 0 10px rgba(212, 175, 55, 0.16)' : 'none'
+  background: isToday ? 'rgba(224, 169, 60, 0.1)' : 'transparent',
+  boxShadow: isToday ? '0 0 10px rgba(224, 169, 60, 0.16)' : 'none'
 });
 
 const dayNumber = {
@@ -633,7 +633,7 @@ const footer = {
   fontSize: '8px',
   letterSpacing: '0.3em',
   textTransform: 'uppercase',
-  color: 'rgba(154, 144, 122, 0.65)'
+  color: 'rgba(242, 233, 216, 0.65)'
 };
 
 export const render = (
@@ -643,7 +643,7 @@ export const render = (
   if (error) {
     return (
       <div style={card}>
-        <div style={{ ...title, color: '#ff9b9b' }}>Daily Energy</div>
+        <div style={{ ...title, color: '#d97a2b' }}>Daily Energy</div>
         <div style={{ ...note, marginTop: '10px' }}>{String(error)}</div>
       </div>
     );

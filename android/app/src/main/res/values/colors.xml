@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_bg">#0B0B0A</color>
-    <color name="panel_bg">#14130F</color>
-    <color name="widget_bg">#F20F0E0B</color>
-    <color name="gold">#D4AF37</color>
-    <color name="gold_light">#E8C56D</color>
-    <color name="bronze">#CD7F32</color>
-    <color name="paper">#EFE6CF</color>
-    <color name="muted">#9A907A</color>
-    <color name="rule">#33D4AF37</color>
-    <color name="chip_bg">#1AD4AF37</color>
-    <color name="launcher_bg">#12110D</color>
+    <color name="app_bg">#0A2E55</color>
+    <color name="panel_bg">#082544</color>
+    <color name="widget_bg">#F2082544</color>
+    <color name="gold">#E0A93C</color>
+    <color name="gold_light">#F2E9D8</color>
+    <color name="bronze">#D97A2B</color>
+    <color name="paper">#F2E9D8</color>
+    <color name="muted">#99F2E9D8</color>
+    <color name="rule">#33E0A93C</color>
+    <color name="chip_bg">#1AE0A93C</color>
+    <color name="launcher_bg">#0A2E55</color>
 </resources>

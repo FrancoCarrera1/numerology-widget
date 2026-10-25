@@ -2,9 +2,12 @@
 /**
  * MCP server for the numerology engine.
  *
- * Two tools:
+ * Five tools:
  *   - user_profile()                  → life path + the four timing cycles
  *   - numerology_query(mode, ...)     → date_energy | range_scan | life_path | calendar
+ *   - roster(date?, tag?)             → everyone's energies, primary first
+ *   - person(id, date?)               → one person's detail
+ *   - upcoming(id, date?, days?)      → favourable days, ascending
  *
  * The server shells out to tool/numerology-cli.mjs rather than re-implementing
  * the wrappers: one code path, one JSON shape, so an MCP host sees exactly what a
@@ -70,6 +73,52 @@ const TOOLS = [
     }
   },
   {
+    name: 'roster',
+    description:
+      'Everyone in the local people roster with life path, full-date energy, secondary energy, combined key and timing cycles. Primary person first. Optional date and tag filter.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        date: { type: 'string', description: 'YYYY-MM-DD (default: today)' },
+        tag: { type: 'string', description: 'Only include people carrying this tag' }
+      },
+      additionalProperties: false
+    }
+  },
+  {
+    name: 'person',
+    description:
+      'One person from the roster: life path, a chosen date\'s energies, and universal/personal cycles. Use roster first to discover ids.',
+    inputSchema: {
+      type: 'object',
+      required: ['id'],
+      properties: {
+        id: { type: 'string', description: 'Person id, e.g. "franco"' },
+        date: { type: 'string', description: 'YYYY-MM-DD (default: today)' }
+      },
+      additionalProperties: false
+    }
+  },
+  {
+    name: 'upcoming',
+    description:
+      'Upcoming favourable days for one person: dates whose daily energy resolves to 3, 5, 6 or 9, or is 28. Ascending from the start date.',
+    inputSchema: {
+      type: 'object',
+      required: ['id'],
+      properties: {
+        id: { type: 'string', description: 'Person id, e.g. "gary"' },
+        date: { type: 'string', description: 'YYYY-MM-DD start date (default: today)' },
+        days: { type: 'number', description: 'Calendar days to scan, default 30' },
+        favourable_only: {
+          type: 'boolean',
+          description: 'Default true; set false to include every day in the window'
+        }
+      },
+      additionalProperties: false
+    }
+  },
+  {
     name: 'numerology_query',
     description:
       'Query the engine. mode=date_energy needs date; range_scan needs start and end (optional target_energies); life_path takes optional birth_date; calendar takes optional month (YYYY-MM).',
@@ -115,6 +164,28 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { mode, ...rest } = args;
       if (!mode) return errorResult('numerology_query requires "mode"');
       const result = await runCli(mode, rest);
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+
+    if (name === 'roster') {
+      const result = await runCli('roster', { date: args.date, tag: args.tag });
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+
+    if (name === 'person') {
+      if (!args.id) return errorResult('person requires "id"');
+      const result = await runCli('person', { id: args.id, date: args.date });
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+
+    if (name === 'upcoming') {
+      if (!args.id) return errorResult('upcoming requires "id"');
+      const result = await runCli('upcoming', {
+        id: args.id,
+        date: args.date,
+        days: args.days,
+        favourable_only: args.favourable_only
+      });
       return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
     }
 

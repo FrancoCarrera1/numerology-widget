@@ -5,8 +5,9 @@ Expose the existing engine as a deterministic CLI, then as an MCP tool.
 The wrapper in `tool/numerology-cli.mjs` **does not reimplement any rule**. It
 calls the same `src/numerology-core.ts` functions the web component, the
 Übersicht widget, and the Android app use, so its numbers cannot drift from the
-UI. Every mode prints JSON on stdout; a human-readable status never goes to
-stdout, so a caller can always parse it.
+UI. The original modes print JSON on stdout. New roster reads print a readable
+summary by default and the same JSON with `--json`; a caller can always parse
+the `--json` or JSON-argument form.
 
 ## Prerequisite: build the engine
 
@@ -31,7 +32,25 @@ node tool/numerology-cli.mjs <mode> '<json-args>'
 npm run tool -- <mode> '<json-args>'
 ```
 
-Modes: `profile`, `date_energy`, `range_scan`, `life_path`, `calendar`.
+Modes: `profile`, `date_energy`, `range_scan`, `life_path`, `calendar`,
+`roster`, `person`, `upcoming`, `people add|remove|primary`.
+
+Every mode still accepts the JSON-argument form. New read modes also accept
+flags; `--json` gives the same JSON shape MCP returns:
+
+```
+node tool/numerology-cli.mjs roster --date 2026-10-23 --tag research --json
+node tool/numerology-cli.mjs person gary --date 2026-10-23 --json
+node tool/numerology-cli.mjs upcoming gary --days 30 --json
+node tool/numerology-cli.mjs people add --name "Gary" --birthdate 1963-02-17 --tags friend,research
+node tool/numerology-cli.mjs people remove gary
+node tool/numerology-cli.mjs people primary gary
+```
+
+`roster`, `person`, and `upcoming` read the local, gitignored people file at
+`data/people.json` (override with `NUMEROLOGY_PEOPLE_FILE`). The first read
+creates it with one primary person derived from the existing single-user
+birthdate. See `docs/people.md` for the data model and the favourable-day rule.
 
 ### profile
 
@@ -136,8 +155,8 @@ A whole month as a flat day list.
 node tool/numerology-cli.mjs calendar '{"month":"2026-10"}'
 ```
 
-Args: `month` as `YYYY-MM` (default: current month). `weekday` is the 3-letter
-form in every mode.
+Args: `month` as `YYYY-MM` (default: current month), or `year` + `month` numbers
+(e.g. `{"year":2026,"month":10}`). `weekday` is the 3-letter form in every mode.
 
 ## Semantics worth knowing
 

@@ -18,7 +18,37 @@
       </header>
 
       <section class="stage">
-        <numerology-widget id="widget" auto-refresh></numerology-widget>
+        <section class="people-panel" aria-labelledby="roster-title">
+          <div class="panel-heading">
+            <div>
+              <p class="section-eyebrow">People</p>
+              <h2 id="roster-title">Your roster</h2>
+            </div>
+            <button id="add-person-button" class="ghost-button" type="button">Add person</button>
+          </div>
+          <div id="roster-list" class="roster-list" role="list"></div>
+        </section>
+
+        <section class="detail-panel" aria-labelledby="detail-title">
+          <div class="panel-heading detail-heading">
+            <div>
+              <p class="section-eyebrow" id="detail-eyebrow">Person detail</p>
+              <h2 id="detail-title">Daily Energy</h2>
+            </div>
+            <button id="edit-person-button" class="ghost-button" type="button">Edit</button>
+          </div>
+          <div id="detail-meta" class="detail-meta"></div>
+
+          <numerology-widget id="widget" auto-refresh></numerology-widget>
+
+          <div class="upcoming-panel">
+            <div class="upcoming-heading">
+              <span class="upcoming-title">Favourable days</span>
+              <span id="upcoming-window" class="upcoming-window"></span>
+            </div>
+            <div id="upcoming-list" class="upcoming-list"></div>
+          </div>
+        </section>
 
         <div class="controls">
           <label class="date-control">
@@ -37,6 +67,49 @@
         <span>Universal + Personal Year/Month</span>
       </footer>
     </main>
+
+    <dialog id="person-dialog" class="person-dialog" aria-labelledby="person-dialog-title">
+      <form id="person-form" class="person-form" novalidate>
+        <div class="dialog-heading">
+          <p class="section-eyebrow">Roster</p>
+          <h2 id="person-dialog-title">Add person</h2>
+        </div>
+
+        <label class="form-field">
+          <span>Name</span>
+          <input name="name" type="text" autocomplete="name" required />
+        </label>
+
+        <label class="form-field">
+          <span>Birthdate</span>
+          <input name="birthdate" type="date" required />
+        </label>
+
+        <label class="form-field">
+          <span>Tags</span>
+          <input name="tags" type="text" placeholder="friend, work, research" />
+        </label>
+
+        <label class="form-field">
+          <span>Notes</span>
+          <textarea name="notes" rows="3" placeholder="Anything worth remembering"></textarea>
+        </label>
+
+        <label class="form-check">
+          <input name="primary" type="checkbox" />
+          <span>Primary person</span>
+        </label>
+
+        <p id="person-form-error" class="form-error" role="alert"></p>
+
+        <div class="form-actions">
+          <button id="delete-person-button" class="danger-button" type="button">Remove</button>
+          <span class="form-spacer"></span>
+          <button id="cancel-person-button" class="ghost-button" type="button">Cancel</button>
+          <button class="primary-button" type="submit">Save</button>
+        </div>
+      </form>
+    </dialog>
 
     <script type="module" src="./main.ts"></script>
   </body>

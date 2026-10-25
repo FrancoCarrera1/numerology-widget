@@ -15,6 +15,7 @@ export default defineConfig({
     lib: {
       entry: {
         'numerology-core': resolve(__dirname, 'src/numerology-core.ts'),
+        'people': resolve(__dirname, 'src/people.ts'),
         'web-component': resolve(__dirname, 'src/web-component.ts'),
         'react': resolve(__dirname, 'src/react.tsx')
       },
@@ -23,7 +24,7 @@ export default defineConfig({
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'mjs' : 'cjs'}`
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', /^node:/],
       output: {
         exports: 'named',
         globals: {

@@ -19,7 +19,20 @@ node tool/numerology-cli.mjs <mode> '<json-args>'
 npm run tool -- <mode> '<json-args>'
 ```
 
-Modes: `profile`, `date_energy`, `range_scan`, `life_path`, `calendar`.
+Modes: `profile`, `date_energy`, `range_scan`, `life_path`, `calendar`,
+`roster`, `person`, `upcoming`, and `people`.
+
+The JSON-argument form below still works for every mode. The people modes also
+accept readable flags:
+
+```bash
+node tool/numerology-cli.mjs roster --date 2026-10-23 --tag research --json
+node tool/numerology-cli.mjs person gary --date 2026-10-23 --json
+node tool/numerology-cli.mjs upcoming gary --days 30 --json
+node tool/numerology-cli.mjs people add --name "Gary" --birthdate 1963-02-17 --tags friend,research
+node tool/numerology-cli.mjs people remove gary
+node tool/numerology-cli.mjs people primary gary
+```
 
 ---
 
@@ -155,6 +168,63 @@ Each day includes `weekday` (3-letter form: `Thu`, `Fri`, etc.),
 
 ---
 
+### `roster`
+
+Everyone in the local people file with their energies for a date. The primary
+person is always first.
+
+```bash
+node tool/numerology-cli.mjs roster '{"date":"2026-10-23","tag":"research"}'
+# or
+node tool/numerology-cli.mjs roster --date 2026-10-23 --tag research --json
+```
+
+**Args** (optional): `date` (default today), `tag` (filter), `json` (flag form).
+Each entry includes the stored person fields, `life_path`, the two daily
+energies, `combined`, and `cycles`.
+
+### `person`
+
+One person's detail, using the same entry shape as a roster row.
+
+```bash
+node tool/numerology-cli.mjs person gary '{"date":"2026-10-23"}'
+node tool/numerology-cli.mjs person gary --date 2026-10-23 --json
+```
+
+**Args:** `id` (required), `date` (optional, default today).
+
+### `upcoming`
+
+Favourable dates for one person, ascending. A day qualifies when either full-date
+method resolves to 3/5/6/9, or the day is the special 28.
+
+```bash
+node tool/numerology-cli.mjs upcoming gary '{"date":"2026-10-20","days":15}'
+node tool/numerology-cli.mjs upcoming gary --date 2026-10-20 --days 15 --json
+```
+
+**Args:** `id` (required), `date` (start, optional), `days` (default 30),
+`favourable_only` (default true; set false or use `--all` to include every day).
+
+### `people add|remove|primary`
+
+Write to `data/people.json` (override with `NUMEROLOGY_PEOPLE_FILE`). Writes print
+JSON.
+
+```bash
+node tool/numerology-cli.mjs people add --name "Gary" \
+  --birthdate 1963-02-17 --tags friend,research --notes "GG33"
+node tool/numerology-cli.mjs people remove gary
+node tool/numerology-cli.mjs people primary gary
+```
+
+The first person is primary automatically. Removing the primary promotes the
+next person; removing the last person is refused so a roster always has a
+primary.
+
+---
+
 ## Semantics
 
 - **`publish_eligible`** is *not* derived from the displayed energy. It takes the
@@ -218,3 +288,10 @@ No stack trace — just parseable JSON, so callers can always handle it.
 | 1963-02-17 | 11 |
 | 1847-02-11 | 33 |
 | 1935-02-08 | 28 (1 underneath) |
+| 2000-11-07 | 11 (total 20, final 2 reads as 11) |
+
+**People roster:**
+
+A three-person roster is primary-first, each life path is computed from that
+person's own birthdate, and `upcoming` returns only 3/5/6/9 or 28 days in
+ascending order. The full fixtures live in `src/__tests__/people.test.ts`.

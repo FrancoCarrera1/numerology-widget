@@ -12,6 +12,11 @@
       "import": "./dist/numerology-core.mjs",
       "require": "./dist/numerology-core.cjs"
     },
+    "./people": {
+      "types": "./dist/people.d.ts",
+      "import": "./dist/people.mjs",
+      "require": "./dist/people.cjs"
+    },
     "./web-component": {
       "types": "./dist/web-component.d.ts",
       "import": "./dist/web-component.mjs",

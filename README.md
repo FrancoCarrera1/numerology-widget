@@ -6,7 +6,8 @@ are implemented in TypeScript for the web and macOS widgets and in Kotlin for
 Android, with matching fixture suites.
 
 It calculates the daily energy, your Life Path, and the universal and
-personal timing cycles:
+personal timing cycles. You can also keep a private roster of other people's
+birthdays and see everyone's day side by side — see [docs/people.md](docs/people.md).
 
 | Number | Calculation |
 | --- | --- |
@@ -40,7 +41,7 @@ Three more surfaces call the same engine. No rule lives outside
 | Surface | Path | What it is |
 | --- | --- | --- |
 | **CLI** | `tool/numerology-cli.mjs` | JSON on stdout for shell scripts, cron and non-Node agents — [docs/cli.md](docs/cli.md) |
-| **MCP server** | `mcp/server.mjs` | Two tools (`user_profile`, `numerology_query`) over stdio for Claude Code / Cursor / Pi — [docs/mcp.md](docs/mcp.md) |
+| **MCP server** | `mcp/server.mjs` | Five tools (`user_profile`, `numerology_query`, `roster`, `person`, `upcoming`) over stdio for Claude Code / Cursor / Pi — [docs/mcp.md](docs/mcp.md) |
 | **The Chart** | `app/` | Pi SDK planning agent that turns cycle data into dated decisions — [docs/app.md](docs/app.md) |
 
 ```bash
@@ -238,10 +239,12 @@ the main numbers and timing cycles. Add `hide-calendar` if you only want the dai
 numbers. The optional `show-weekly` seven-day view remains available for
 compact embeds.
 
-Set a full birthday in the **Birthday** field under the cycle cards. The demo
-stores it in `localStorage`; the embedded widget emits a `birthday-change`
-event so your own page can persist it. The year unlocks Life Path; Personal
-Year/Month use only the month and day.
+Set a full birthday in the **Birthday** field under the cycle cards, or use the
+roster's **Add person** form. The demo stores the roster and birthdays in
+`localStorage`; the embedded widget emits a `birthday-change` event so your own
+page can persist it. The year unlocks Life Path; Personal Year/Month use only the
+month and day. The roster is pinned primary-first and each person's detail view
+shows their Life Path, today, this week, and their next five favourable days.
 
 On a phone, open the hosted page in Chrome and choose **Add to Home screen**.
 HTTPS is required for a permanent hosted install; `file://` is fine for the
@@ -390,6 +393,24 @@ console.log(cycles.personalMonth?.displayValue); // "11"
 console.log(cycles.personalMonth?.dateLabel);    // "Sep 23 – Oct 23, 2026"
 ```
 
+### People roster (Node)
+
+```ts
+import { addPerson, getRoster, getUpcoming } from 'numerology-widget/people';
+
+addPerson({ name: 'Gary', birthdate: '1963-02-17', tags: ['friend'] });
+
+const roster = getRoster('2026-10-23'); // primary first
+const days = getUpcoming('gary', { date: '2026-10-23', days: 30 });
+
+console.log(roster[1].lifePath.displayValue); // "11"
+console.log(days[0].date);                    // next favourable day
+```
+
+The roster is stored in `data/people.json` (gitignored, override with
+`NUMEROLOGY_PEOPLE_FILE`). See [docs/people.md](docs/people.md) for the full API,
+privacy rules, CLI/MCP commands, and native-port notes.
+
 ## Attributes
 
 | Attribute | Description |
@@ -537,8 +558,21 @@ Life Path fixtures:
 | 1847-02-11 | 33 |
 | 1935-02-08 | 28 (1 underneath) |
 
-The web suite has 50 tests; the Kotlin port has 27 tests, including the calendar
-grid, timing-cycle, and Life Path fixtures.
+Multi-person fixtures additionally pin:
+
+- a person with Life Path **11** (`1963-02-17`) stays `11`, never `2`;
+- a person with Life Path **28** (`1935-02-08`) displays `28` with `1`
+  underneath;
+- a person with Life Path **33** (`1847-02-11`) displays `33` with `6`
+  underneath;
+- a birthdate totalling 20 (`2000-11-07`) reads as **11**;
+- a three-person roster is primary-first and each person's cycles use their own
+  birthdate;
+- `getUpcoming` returns only 3/5/6/9 or 28 days, ascending, inside the window.
+
+The web core suite has 50 tests, the people suite adds 13 multi-person fixtures,
+and the Kotlin port has 27 tests, including the calendar grid, timing-cycle, and
+Life Path fixtures.
 
 ## Project structure
 
@@ -546,11 +580,16 @@ grid, timing-cycle, and Life Path fixtures.
 numerology-widget/
 ├── src/
 │   ├── numerology-core.ts        # zero-dependency calculation engine
+│   ├── people-model.ts           # browser-safe roster rules + energy wrappers
+│   ├── people.ts                 # Node JSON storage (birthdays stay local)
 │   ├── web-component.ts          # <numerology-widget> custom element
 │   ├── react.tsx                 # React wrapper
 │   └── __tests__/
-│       └── numerology-core.test.ts
-├── demo/                         # occult-gold demo page
+│       ├── numerology-core.test.ts
+│       └── people.test.ts        # multi-person fixtures
+├── data/
+│   └── people.example.json       # committed example; data/people.json is ignored
+├── demo/                         # occult-gold demo page + roster
 ├── standalone/                   # open index.html directly, no build
 │   ├── index.html
 │   └── numerology-widget.iife.js

@@ -18,6 +18,16 @@ None of them re-implements a reduction, a master-number rule, or a cycle
 boundary. That is the hard constraint of this repo: if a number looks wrong, the
 bug is in `src/numerology-core.ts` (or its fixtures), never in a surface.
 
+## The people layer
+
+`src/people-model.ts` is browser-safe: validation, slug/primary ordering, and
+the thin `getPersonEnergies` / `getRoster` / `getUpcoming` wrappers over the
+engine. `src/people.ts` adds Node filesystem storage (built separately as
+`dist/people.mjs` because the core must stay importable in a browser). The CLI
+and MCP read that file; the static web demo keeps its own roster in
+`localStorage` because it has no server. The two are intentionally not synced.
+See [people.md](people.md).
+
 ## Why the engine is separate
 
 - **One definition of truth.** Life Path has three exceptions (28 wealth, 33, and

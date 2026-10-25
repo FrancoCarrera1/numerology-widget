@@ -12,6 +12,10 @@ coverage/
 # Local personal birthday for the macOS widget (MM-DD or YYYY-MM-DD)
 uebersicht/birthday.txt
 
+# Personal people roster. The example file is safe to commit; real birthdays are not.
+data/*
+!data/people.example.json
+
 # Posting agent local secrets and duplicate-post state
 agent/.env
 agent/state.json

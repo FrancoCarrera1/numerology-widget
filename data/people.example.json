@@ -1,0 +1,20 @@
+{
+  "people": [
+    {
+      "id": "you",
+      "name": "You",
+      "birthdate": "1990-01-01",
+      "tags": ["self"],
+      "notes": "Example only — replace with your own details.",
+      "primary": true
+    },
+    {
+      "id": "friend",
+      "name": "Friend",
+      "birthdate": "1992-06-15",
+      "tags": ["friend", "example"],
+      "notes": "Example only — birthdays are never committed.",
+      "primary": false
+    }
+  ]
+}

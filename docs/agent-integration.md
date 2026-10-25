@@ -15,8 +15,8 @@ gets the answer right, because the next date will quietly disagree with the widg
 | You are | Use | Why |
 |---|---|---|
 | A shell script or cron job | `tool/numerology-cli.mjs` | JSON on stdout, no SDK |
-| Claude Code / Cursor / Pi (third-party host) | `mcp/server.mjs` | stdio MCP, two tools |
-| A Node agent you control | import `dist/numerology-core.mjs` | no subprocess hop |
+| Claude Code / Cursor / Pi (third-party host) | `mcp/server.mjs` | stdio MCP, five tools |
+| A Node agent you control | import `dist/numerology-core.mjs` (or `dist/people.mjs` for the roster) | no subprocess hop |
 | The Chart (`app/`) | its in-process tools | same engine, typed schemas |
 
 ## Tool contracts

@@ -1,7 +1,8 @@
 # MCP server
 
-`mcp/server.mjs` exposes the engine to any MCP host over **stdio**. Two tools, no
-more: an agent should ask for a profile or a query, not for fourteen variants.
+`mcp/server.mjs` exposes the engine to any MCP host over **stdio**. Five tools:
+two existing query tools plus the people roster. An agent asks for a profile, a
+query, the roster, one person, or their upcoming days — not fourteen variants.
 
 It shells out to `tool/numerology-cli.mjs`, so what an MCP host sees is exactly
 what a shell user sees — including the `ok: false` JSON error shape.
@@ -20,7 +21,8 @@ npm install @modelcontextprotocol/sdk
 echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node mcp/server.mjs
 ```
 
-You should see two tool names on stdout. The server prints its readiness line on
+You should see five tool names on stdout: `user_profile`, `numerology_query`,
+`roster`, `person`, and `upcoming`. The server prints its readiness line on
 **stderr**, so stdout stays a clean protocol channel.
 
 ## Tool schemas
@@ -82,6 +84,43 @@ Example result for `date_energy` on 2026-10-22:
 
 `publish_eligible` is false because the **day of the month** is 22 — a master
 number, and not one of 3/5/6/9. It is not derived from `6/33`.
+
+### `roster`
+
+| Field | Type | Notes |
+|---|---|---|
+| `date` | string `YYYY-MM-DD` | default: today |
+| `tag` | string | optional tag filter |
+
+Returns `{ ok, mode: "roster", date, count, people }`, primary first. Each person
+entry is the same shape as the CLI JSON: stored fields plus `life_path`,
+`full_date_energy`, `secondary_energy`, `combined`, and `cycles`.
+
+### `person`
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | string | required |
+| `date` | string `YYYY-MM-DD` | default: today |
+
+Returns `{ ok, mode: "person", date, person }` with the same entry shape as a
+roster row.
+
+### `upcoming`
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | string | required |
+| `date` | string `YYYY-MM-DD` | start date, default today |
+| `days` | number | default 30 |
+| `favourable_only` | boolean | default true |
+
+Returns ascending dates whose full-date energy resolves to 3/5/6/9, or is the
+special 28. Set `favourable_only: false` to include every day in the window.
+
+The roster lives in `data/people.json` (gitignored; override with
+`NUMEROLOGY_PEOPLE_FILE`). See [people.md](people.md) for the data model and
+privacy rules.
 
 ## Client configuration
 
